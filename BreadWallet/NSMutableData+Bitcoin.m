@@ -240,7 +240,7 @@ CFAllocatorRef SecureAllocator()
     [self appendUInt32:GROESTLCOIN_MAGIC_NUMBER];
     [self appendNullPaddedString:type length:12];
     [self appendUInt32:(uint32_t)message.length];
-    [self appendBytes:message.SHA256_2.u32 length:4];
+    [self appendBytes:message.GROESTL_2.u32 length:4];
     [self appendBytes:message.bytes length:message.length];
 }
 

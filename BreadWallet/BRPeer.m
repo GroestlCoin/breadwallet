@@ -39,7 +39,7 @@
 #define MAX_MSG_LENGTH     0x02000000
 #define MAX_GETDATA_HASHES 50000
 #define ENABLED_SERVICES   0     // we don't provide full blocks to remote nodes
-#define PROTOCOL_VERSION   70013
+#define PROTOCOL_VERSION   70002
 #define MIN_PROTO_VERSION  70001 // peers earlier than this protocol version not supported (need v0.9 txFee relay rules)
 #define LOCAL_HOST         0x7f000001
 #define CONNECT_TIMEOUT    3.0
@@ -272,7 +272,6 @@ services:(uint64_t)services
 
     CFRunLoopPerformBlock([self.runLoop getCFRunLoop], kCFRunLoopCommonModes, ^{
         NSLog(@"%@:%u sending %@", self.host, self.port, type);
-
         [self.outputBuffer appendMessage:message type:type];
         
         while (self.outputBuffer.length > 0 && self.outputStream.hasSpaceAvailable) {
@@ -755,8 +754,8 @@ services:(uint64_t)services
     NSTimeInterval t = [message UInt32AtOffset:l + 81*(count - 1) + 68] - NSTimeIntervalSince1970;
 
     if (count >= 2000 || t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) {
-        NSValue *firstHash = uint256_obj([message subdataWithRange:NSMakeRange(l, 80)].SHA256_2),
-                *lastHash = uint256_obj([message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].SHA256_2);
+        NSValue *firstHash = uint256_obj([message subdataWithRange:NSMakeRange(l, 80)].GROESTL_2),
+                *lastHash = uint256_obj([message subdataWithRange:NSMakeRange(l + 81*(count - 1), 80)].GROESTL_2);
 
         if (t + 7*24*60*60 >= self.earliestKeyTime - 2*60*60) { // request blocks for the remainder of the chain
             t = [message UInt32AtOffset:l + 81 + 68] - NSTimeIntervalSince1970;
@@ -766,7 +765,7 @@ services:(uint64_t)services
                 t = [message UInt32AtOffset:off + 81 + 68] - NSTimeIntervalSince1970;
             }
 
-            lastHash = uint256_obj([message subdataWithRange:NSMakeRange(off, 80)].SHA256_2);
+            lastHash = uint256_obj([message subdataWithRange:NSMakeRange(off, 80)].GROESTL_2);
             NSLog(@"%@:%u calling getblocks with locators: %@", self.host, self.port, @[lastHash, firstHash]);
             [self sendGetblocksMessageWithLocators:@[lastHash, firstHash] andHashStop:UINT256_ZERO];
         }
@@ -1110,10 +1109,10 @@ services:(uint64_t)services
                         if (self.msgPayload.length < length) continue; // wait for more stream input
                     }
                     
-                    if (CFSwapInt32LittleToHost(self.msgPayload.SHA256_2.u32[0]) != checksum) { // verify checksum
+                    if (CFSwapInt32LittleToHost(self.msgPayload.GROESTL_2.u32[0]) != checksum) { // verify checksum
                         [self error:@"error reading %@, invalid checksum %x, expected %x, payload length:%u, expected "
-                         "length:%u, SHA256_2:%@", type, self.msgPayload.SHA256_2.u32[0], checksum,
-                         (int)self.msgPayload.length, length, uint256_obj(self.msgPayload.SHA256_2)];
+                         "length:%u, GROESTL_2:%@", type, self.msgPayload.GROESTL_2.u32[0], checksum,
+                         (int)self.msgPayload.length, length, uint256_obj(self.msgPayload.GROESTL_2)];
                         goto reset;
                     }
                     

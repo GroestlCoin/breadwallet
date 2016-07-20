@@ -116,7 +116,7 @@ inline static int ceil_log2(int x)
     [d appendUInt32:_timestamp];
     [d appendUInt32:_target];
     [d appendUInt32:_nonce];
-    _blockHash = d.SHA256_2;
+    _blockHash = d.GROESTL_2;
 
     return self;
 }

@@ -45,15 +45,15 @@
 
 #define UNSPENT_URL          @"https://api.breadwallet.com/q/addrs/utxo"
 #define UNSPENT_FAILOVER_URL @"https://insight.bitpay.com/api/addrs/utxo"
-#define FEE_PER_KB_URL       @"https://api.breadwallet.com/fee-per-kb"
-#define TICKER_URL           @"https://api.breadwallet.com/rates"
-#define TICKER_FAILOVER_URL  @"https://bitpay.com/rates"
+#define BITCOIN_TICKER_URL           @"https://api.breadwallet.com/rates"
+#define BITCOIN_TICKER_FAILOVER_URL  @"https://bitpay.com/rates"
+#define POLONIEX_TICKER_URL  @"https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_GRS&depth=1"
 
 #define USER_AGENT [NSString stringWithFormat:@"/breadwallet:%@/",\
                     NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]]
 
 #define SEED_ENTROPY_LENGTH   (128/8)
-#define SEC_ATTR_SERVICE      @"org.voisine.breadwallet"
+#define SEC_ATTR_SERVICE      @"com.groestlcoin.groestlwallet"
 #define DEFAULT_CURRENCY_CODE @"USD"
 #define DEFAULT_SPENT_LIMIT   SATOSHIS
 
@@ -61,6 +61,8 @@
 #define CURRENCY_CODES_KEY      @"CURRENCY_CODES"
 #define CURRENCY_NAMES_KEY      @"CURRENCY_NAMES"
 #define CURRENCY_PRICES_KEY     @"CURRENCY_PRICES"
+#define POLONIEX_GROESTL_BTC_PRICE_KEY  @"POLONIEX_GROESTL_BTC_PRICE"
+#define POLONIEX_GROESTL_BTC_UPDATE_TIME_KEY  @"POLONIEX_GROESTL_BTC_UPDATE_TIME"
 #define SPEND_LIMIT_AMOUNT_KEY  @"SPEND_LIMIT_AMOUNT"
 #define PIN_UNLOCK_TIME_KEY     @"PIN_UNLOCK_TIME"
 #define SECURE_TIME_KEY         @"SECURE_TIME"
@@ -201,7 +203,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 @property (nonatomic, strong) BRWallet *wallet;
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic, strong) NSArray *currencyPrices;
-@property (nonatomic, strong) NSNumber *localPrice;
+@property (nonatomic, strong) NSNumber *localBitcoinPrice;
 @property (nonatomic, assign) BOOL sweepFee, didPresent;
 @property (nonatomic, strong) NSString *sweepKey;
 @property (nonatomic, strong) void (^sweepCompletion)(BRTransaction *tx, uint64_t fee, NSError *error);
@@ -210,6 +212,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 @property (nonatomic, strong) NSString *currentPin;
 @property (nonatomic, strong) NSMutableSet *failedPins;
 @property (nonatomic, strong) id protectedObserver;
+@property (nonatomic, assign) double bitcoinGroestlPrice; // exchange rate in bitcoin per dash
 
 @end
 
@@ -275,7 +278,8 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     _currencyPrices = [defs arrayForKey:CURRENCY_PRICES_KEY];
     self.localCurrencyCode = ([defs stringForKey:LOCAL_CURRENCY_CODE_KEY]) ?
         [defs stringForKey:LOCAL_CURRENCY_CODE_KEY] : [[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode];
-    dispatch_async(dispatch_get_main_queue(), ^{ [self updateExchangeRate]; });
+    dispatch_async(dispatch_get_main_queue(), ^{ [self updateBitcoinExchangeRate]; });
+    dispatch_async(dispatch_get_main_queue(), ^{ [self updateGroestlExchangeRate]; });
 }
 
 - (void)dealloc
@@ -849,9 +853,13 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 
 #pragma mark - exchange rate
 
-- (double)localCurrencyPrice
+- (double)localCurrencyPrice {
+    return self.localBitcoinPrice.doubleValue  * self.bitcoinGroestlPrice;
+}
+
+- (double)localCurrencyBitcoinPrice
 {
-    return self.localPrice.doubleValue;
+    return self.localBitcoinPrice.doubleValue;
 }
 
 // local currency ISO code
@@ -864,13 +872,13 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     _localCurrencyCode = [code copy];
 
     if (i < _currencyPrices.count && self.secureTime + 3*24*60*60 > [NSDate timeIntervalSinceReferenceDate]) {
-        self.localPrice = _currencyPrices[i]; // don't use exchange rate data more than 72hrs out of date
+        self.localBitcoinPrice = _currencyPrices[i]; // don't use exchange rate data more than 72hrs out of date
     }
-    else self.localPrice = @(0);
+    else self.localBitcoinPrice = @(0);
 
     self.localFormat.currencyCode = _localCurrencyCode;
     self.localFormat.maximum =
-        [[NSDecimalNumber decimalNumberWithDecimal:self.localPrice.decimalValue]
+        [[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
          decimalNumberByMultiplyingBy:(id)[NSDecimalNumber numberWithLongLong:MAX_MONEY/SATOSHIS]];
 
     if ([self.localCurrencyCode isEqual:[[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode]]) {
@@ -880,6 +888,28 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 
     if (! _wallet) return;
 
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:BRWalletBalanceChangedNotification object:nil];
+    });
+}
+
+-(double)bitcoinGroestlPrice {
+    if (_bitcoinGroestlPrice == 0) {
+        NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+        
+        double poloniexPrice = [[defs objectForKey:POLONIEX_GROESTL_BTC_PRICE_KEY] doubleValue];
+        _bitcoinGroestlPrice = poloniexPrice;
+        
+    }
+    return _bitcoinGroestlPrice;
+}
+
+- (void)refreshBitcoinGroestlPrice{
+    NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+    double cryptsyPrice = [[defs objectForKey:POLONIEX_GROESTL_BTC_PRICE_KEY] doubleValue];
+    _bitcoinGroestlPrice = cryptsyPrice;
+    if (! _wallet) return;
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:BRWalletBalanceChangedNotification object:nil];
     });
@@ -955,58 +985,62 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
                  object:nil];
             }
         });
-        
-        [self updateFeePerKb];
     }] resume];
 }
 
-- (void)updateExchangeRate
+- (void)updateGroestlExchangeRate
 {
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateExchangeRate) object:nil];
-    [self performSelector:@selector(updateExchangeRate) withObject:nil afterDelay:60.0];
-
-    [self loadTicker:TICKER_URL withJSONKey:@"body" failoverHandler:^{
-        [self loadTicker:TICKER_FAILOVER_URL withJSONKey:@"data" failoverHandler:nil];
-    }];
-}
-
-#pragma mark - floating fees
-
-- (void)updateFeePerKb
-{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateGroestlExchangeRate) object:nil];
+    [self performSelector:@selector(updateGroestlExchangeRate) withObject:nil afterDelay:60.0];
     if (self.reachability.currentReachabilityStatus == NotReachable) return;
-
-    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:FEE_PER_KB_URL]
-                                cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
     
-    [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
-    NSLog(@"%@", req.URL.absoluteString);
+    
+    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:POLONIEX_TICKER_URL]
+                                         cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
+    
+    [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue currentQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                               if (((((NSHTTPURLResponse*)response).statusCode /100) != 2) || connectionError) {
+                                   NSLog(@"connectionError %@ (status %ld)", connectionError,(long)((NSHTTPURLResponse*)response).statusCode);
+                                   return;
+                               }
+                               NSError *error = nil;
+                               NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                               NSArray * asks = [json objectForKey:@"asks"];
+                               NSArray * bids = [json objectForKey:@"bids"];
+                               if ([asks count] && [bids count] && [[asks objectAtIndex:0] count] && [[bids objectAtIndex:0] count]) {
+                                   NSString * lastTradePriceStringAsks = [[asks objectAtIndex:0] objectAtIndex:0];
+                                   NSString * lastTradePriceStringBids = [[bids objectAtIndex:0] objectAtIndex:0];
+                                   if (lastTradePriceStringAsks && lastTradePriceStringBids) {
+                                       NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                                       NSLocale *usa = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+                                       numberFormatter.locale = usa;
+                                       numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+                                       NSNumber *lastTradePriceNumberAsks = [numberFormatter numberFromString:lastTradePriceStringAsks];
+                                       NSNumber *lastTradePriceNumberBids = [numberFormatter numberFromString:lastTradePriceStringBids];
+                                       NSNumber * lastTradePriceNumber = @((lastTradePriceNumberAsks.floatValue + lastTradePriceNumberBids.floatValue) / 2);
+                                       NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
+                                       [defs setObject:lastTradePriceNumber forKey:POLONIEX_GROESTL_BTC_PRICE_KEY];
+                                       [defs setObject:[NSDate date] forKey:POLONIEX_GROESTL_BTC_UPDATE_TIME_KEY];
+                                       [defs synchronize];
+                                       [self refreshBitcoinGroestlPrice];
+                                   }
+                               }
+//                               NSLog(@"poloniex exchange rate updated to %@/%@", [self localCurrencyStringForDashAmount:DUFFS],
+//                                     [self bitcoinStringForAmount:DUFFS]);
+                           }
+     ];
+    
+}
 
-    [[[NSURLSession sharedSession] dataTaskWithRequest:req
-    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error != nil) {
-            NSLog(@"unable to fetch fee-per-kb: %@", error);
-            return;
-        }
-        
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+- (void)updateBitcoinExchangeRate
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateBitcoinExchangeRate) object:nil];
+    [self performSelector:@selector(updateBitcoinExchangeRate) withObject:nil afterDelay:60.0];
 
-        if (error || ! [json isKindOfClass:[NSDictionary class]] ||
-            ! [json[@"fee_per_kb"] isKindOfClass:[NSNumber class]]) {
-            NSLog(@"unexpected response from %@:\n%@", req.URL.host,
-                  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            return;
-        }
-
-        uint64_t newFee = [json[@"fee_per_kb"] unsignedLongLongValue];
-        NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
-        
-        if (newFee >= MIN_FEE_PER_KB && newFee <= MAX_FEE_PER_KB && newFee != [defs doubleForKey:FEE_PER_KB_KEY]) {
-            NSLog(@"setting new fee-per-kb %lld", newFee);
-            [defs setDouble:newFee forKey:FEE_PER_KB_KEY]; // use setDouble since setInteger won't hold a uint64_t
-            _wallet.feePerKb = newFee;
-        }
-    }] resume];
+    [self loadTicker:BITCOIN_TICKER_URL withJSONKey:@"body" failoverHandler:^{
+        [self loadTicker:BITCOIN_TICKER_FAILOVER_URL withJSONKey:@"data" failoverHandler:nil];
+    }];
 }
 
 #pragma mark - query unspent outputs
@@ -1202,7 +1236,7 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
     if ([string hasPrefix:@"<"]) string = [string substringFromIndex:1];
 
     NSNumber *n = [self.localFormat numberFromString:string];
-    int64_t price = [[NSDecimalNumber decimalNumberWithDecimal:self.localPrice.decimalValue]
+    int64_t price = [[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
                       decimalNumberByMultiplyingByPowerOf10:self.localFormat.maximumFractionDigits].longLongValue,
             local = [[NSDecimalNumber decimalNumberWithDecimal:n.decimalValue]
                       decimalNumberByMultiplyingByPowerOf10:self.localFormat.maximumFractionDigits].longLongValue,
@@ -1224,9 +1258,9 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
 - (NSString *)localCurrencyStringForAmount:(int64_t)amount
 {
     if (amount == 0) return [self.localFormat stringFromNumber:@(0)];
-    if (self.localPrice.doubleValue <= DBL_EPSILON) return @""; // no exchange rate data
+    if (self.localBitcoinPrice.doubleValue <= DBL_EPSILON) return @""; // no exchange rate data
 
-    NSDecimalNumber *n = [[[NSDecimalNumber decimalNumberWithDecimal:self.localPrice.decimalValue]
+    NSDecimalNumber *n = [[[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
                            decimalNumberByMultiplyingBy:(id)[NSDecimalNumber numberWithLongLong:llabs(amount)]]
                           decimalNumberByDividingBy:(id)[NSDecimalNumber numberWithLongLong:SATOSHIS]],
                      *min = [[NSDecimalNumber one]

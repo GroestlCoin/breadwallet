@@ -2874,7 +2874,7 @@ H[u] ^= x[u]; \
         for (u = 0; u < 16; u ++)
             enc32e(pad + (u << 2), H[u + 16]);
 #endif
-        memcpy(dst, pad + 64 - out_len, out_len);
+        memcpy(dst, pad, out_len);
         groestl_big_init(sc, (unsigned)out_len << 3);
     }
     
