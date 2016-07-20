@@ -125,6 +125,11 @@
 		BAC7B6BE1BD9C29900165B84 /* BRPhoneWCSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BAC7B6BD1BD9C29900165B84 /* BRPhoneWCSessionManager.m */; };
 		BAE12BF21B2DEE7F00895CC5 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BAE12BE51B2DEE7F00895CC5 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BAE12C061B2DEEF700895CC5 /* BRTodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAE12C051B2DEEF700895CC5 /* BRTodayViewController.m */; };
+		FB65580F1D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
+		FB6558101D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
+		FB6558111D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
+		FB6558121D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
+		FB6558131D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -496,6 +501,10 @@
 		BAE12BEA1B2DEE7F00895CC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BAE12C041B2DEEF700895CC5 /* BRTodayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRTodayViewController.h; sourceTree = "<group>"; };
 		BAE12C051B2DEEF700895CC5 /* BRTodayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRTodayViewController.m; sourceTree = "<group>"; };
+		FB65580D1D3F1A6B003946E3 /* NSData+Groestl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Groestl.h"; sourceTree = "<group>"; };
+		FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Groestl.m"; sourceTree = "<group>"; };
+		FB6558141D3F1C1D003946E3 /* sph_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sph_types.h; sourceTree = "<group>"; };
+		FB6558151D3F1E14003946E3 /* IntTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntTypes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -681,10 +690,14 @@
 		752E28B019234B0500DB5A3C /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				FB6558141D3F1C1D003946E3 /* sph_types.h */,
+				FB6558151D3F1E14003946E3 /* IntTypes.h */,
 				752E28E519234DA200DB5A3C /* NSString+Bitcoin.h */,
 				752E28E619234DA200DB5A3C /* NSString+Bitcoin.m */,
 				752E28DD19234DA200DB5A3C /* NSData+Bitcoin.h */,
 				752E28DE19234DA200DB5A3C /* NSData+Bitcoin.m */,
+				FB65580D1D3F1A6B003946E3 /* NSData+Groestl.h */,
+				FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */,
 				752E28E319234DA200DB5A3C /* NSMutableData+Bitcoin.h */,
 				752E28E419234DA200DB5A3C /* NSMutableData+Bitcoin.m */,
 				752E28E119234DA200DB5A3C /* NSManagedObject+Sugar.h */,
@@ -1270,6 +1283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31D68B531C23B6C10030FAAA /* BreadWalletUITests.swift in Sources */,
+				FB6558121D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
 				31D68B5B1C23B6FD0030FAAA /* SnapshotHelper.swift in Sources */,
 				22DE8CF41D02407F007F07F3 /* BRWalletConstants.m in Sources */,
 			);
@@ -1300,6 +1314,7 @@
 				752E28D119234C3600DB5A3C /* BRKey.m in Sources */,
 				84F68C8A1975E9E2002FC300 /* BRScanViewController.m in Sources */,
 				2204604E1B9F61E600D07B61 /* BREventManager.m in Sources */,
+				FB65580F1D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
 				752E28D219234C3600DB5A3C /* BRKey+BIP38.m in Sources */,
 				220128D71C76E4F30001CAC1 /* BRWalletPlugin.swift in Sources */,
 				220460551BA0BEEE00D07B61 /* BREventConfirmView.m in Sources */,
@@ -1358,6 +1373,7 @@
 				22DE8CF31D02407F007F07F3 /* BRWalletConstants.m in Sources */,
 				222040C81C1A3803005CE1C3 /* BRHTTPServerTests.swift in Sources */,
 				75D5F3F3191EC270004AB296 /* BreadWalletTests.m in Sources */,
+				FB6558111D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
 				22FCD22C1C0E68C80066D798 /* BRTarTests.swift in Sources */,
 				22B6A44A1C0ECB7800673913 /* BRBSPatchTests.swift in Sources */,
 			);
@@ -1376,6 +1392,7 @@
 				BA7B53511BDA9A2800355E8D /* BRAppleWatchData.m in Sources */,
 				BAA6E3EF1BD5CA0E00773205 /* BRAWBalanceInterfaceController.swift in Sources */,
 				BA913BF21BD57E4D005A7C0E /* ExtensionDelegate.swift in Sources */,
+				FB6558131D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
 				BA6645961BD924EB007A6BB1 /* BRAWTransactionRowControl.swift in Sources */,
 				BAA6E3EB1BD5C78500773205 /* BRAWRootInterfaceController.swift in Sources */,
 			);
@@ -1388,6 +1405,7 @@
 				22DE8CF21D02407F007F07F3 /* BRWalletConstants.m in Sources */,
 				2204604F1B9F61E600D07B61 /* BREventManager.m in Sources */,
 				BAE12C061B2DEEF700895CC5 /* BRTodayViewController.m in Sources */,
+				FB6558101D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
 				BAA4843D1B3EFFAF0075C749 /* UIImage+Utils.m in Sources */,
 				75E2503F1B7691C900A2BB2B /* BRBubbleView.m in Sources */,
 			);

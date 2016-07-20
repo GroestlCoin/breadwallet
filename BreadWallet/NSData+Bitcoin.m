@@ -25,6 +25,7 @@
 
 #import "NSData+Bitcoin.h"
 #import "NSString+Bitcoin.h"
+#import "NSData+Groestl.h"
 
 // bitwise left rotation
 #define rol32(a, b) (((a) << (b)) | ((a) >> (32 - (b))))
@@ -442,6 +443,15 @@ void PBKDF2(void *dk, size_t dklen, void (*hash)(void *, const void *, size_t), 
     
     SHA512(&sha512, self.bytes, self.length);
     return sha512;
+}
+
+//this is a groestl 512, but only the first 32 bytes are used
+- (UInt256)GROESTL {
+    return [self groestl512_32Bits];
+}
+
+- (UInt256)GROESTL_2 {
+    return [self groestl512_2_32Bits];
 }
 
 - (UInt160)RMD160
