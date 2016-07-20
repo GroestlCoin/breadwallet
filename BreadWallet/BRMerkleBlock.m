@@ -236,50 +236,80 @@ totalTransactions:(uint32_t)totalTransactions hashes:(NSData *)hashes flags:(NSD
     return txHashes;
 }
 
-// Verifies the block difficulty target is correct for the block's position in the chain. Transition time may be 0 if
-// height is not a multiple of BLOCK_DIFFICULTY_INTERVAL.
-//
-// The difficulty target algorithm works as follows:
-// The target must be the same as in the previous block unless the block's height is a multiple of 2016. Every 2016
-// blocks there is a difficulty transition where a new difficulty is calculated. The new target is the previous target
-// multiplied by the time between the last transition block's timestamp and this one (in seconds), divided by the
-// targeted time between transitions (14*24*60*60 seconds). If the new difficulty is more than 4x or less than 1/4 of
-// the previous difficulty, the change is limited to either 4x or 1/4. There is also a minimum difficulty value
-// intuitively named MAX_PROOF_OF_WORK... since larger values are less difficult.
-- (BOOL)verifyDifficultyFromPreviousBlock:(BRMerkleBlock *)previous andTransitionTime:(uint32_t)time
+- (BOOL)verifyDifficultyWithPreviousBlocks:(NSMutableDictionary *)previousBlocks
 {
-    if (! uint256_eq(_prevBlock, previous.blockHash) || _height != previous.height + 1) return NO;
-    if ((_height % BLOCK_DIFFICULTY_INTERVAL) == 0 && time == 0) return NO;
+    uint32_t darkGravityWaveTarget = [self darkGravityWaveTargetWithPreviousBlocks:previousBlocks];
+    int32_t diff = (self.target & 0x00ffffffu) - darkGravityWaveTarget;
+    return (abs(diff) < 2); //the core client has is less precise with a rounding error that can sometimes cause a problem. We are very rarely 1 off
+}
 
-#if GROESTLCOIN_TESTNET
-    //TODO: implement testnet difficulty rule check
-    return YES; // don't worry about difficulty on testnet for now
-#endif
-
-    if ((_height % BLOCK_DIFFICULTY_INTERVAL) != 0) return (_target == previous.target) ? YES : NO;
-
-    // target is in "compact" format, where the most significant byte is the size of resulting value in bytes, the next
-    // bit is the sign, and the remaining 23bits is the value after having been right shifted by (size - 3)*8 bits
-    static const uint32_t maxsize = MAX_PROOF_OF_WORK >> 24, maxtarget = MAX_PROOF_OF_WORK & 0x00ffffffu;
-    int32_t timespan = (int32_t)((int64_t)previous.timestamp - (int64_t)time), size = previous.target >> 24;
-    uint64_t target = previous.target & 0x00ffffffu;
-
-    // limit difficulty transition to -75% or +400%
-    if (timespan < TARGET_TIMESPAN/4) timespan = TARGET_TIMESPAN/4;
-    if (timespan > TARGET_TIMESPAN*4) timespan = TARGET_TIMESPAN*4;
-
-    // TARGET_TIMESPAN happens to be a multiple of 256, and since timespan is at least TARGET_TIMESPAN/4, we don't lose
-    // precision when target is multiplied by timespan and then divided by TARGET_TIMESPAN/256
-    target *= timespan;
-    target /= TARGET_TIMESPAN >> 8;
-    size--; // decrement size since we only divided by TARGET_TIMESPAN/256
+-(int32_t)darkGravityWaveTargetWithPreviousBlocks:(NSMutableDictionary *)previousBlocks {
+    /* current difficulty formula, darkcoin - based on DarkGravity v3, original work done by evan duffield, modified for iOS */
+    BRMerkleBlock *previousBlock = previousBlocks[uint256_obj(self.prevBlock)];
     
-    while (size < 1 || target > 0x007fffffULL) target >>= 8, size++; // normalize target for "compact" format
-
-    // limit to MAX_PROOF_OF_WORK
-    if (size > maxsize || (size == maxsize && target > maxtarget)) target = maxtarget, size = maxsize;
-
-    return (_target == ((uint32_t)target | size << 24)) ? YES : NO;
+    int64_t nActualTimespan = 0;
+    int64_t lastBlockTime = 0;
+    int64_t blockCount = 0;
+    int64_t sumTargets = 0;
+    
+    if (uint256_is_zero(_prevBlock) || previousBlock.height == 0 || previousBlock.height < DGW_PAST_BLOCKS_MIN) {
+        // This is the first block or the height is < PastBlocksMin
+        // Return minimal required work. (1e0ffff0)
+        return MAX_PROOF_OF_WORK & 0x00ffffffu;
+    }
+    
+    BRMerkleBlock *currentBlock = previousBlock;
+    // loop over the past n blocks, where n == PastBlocksMax
+    for (blockCount = 1; currentBlock && currentBlock.height > 0 && blockCount<=DGW_PAST_BLOCKS_MAX; blockCount++) {
+        
+        // Calculate average difficulty based on the blocks we iterate over in this for loop
+        if(blockCount <= DGW_PAST_BLOCKS_MIN) {
+            uint32_t currentTarget = currentBlock.target & 0x00ffffffu;
+            if (blockCount == 1) {
+                sumTargets = currentTarget * 2;
+            } else {
+                sumTargets += currentTarget;
+            }
+        }
+        
+        // If this is the second iteration (LastBlockTime was set)
+        if(lastBlockTime > 0){
+            // Calculate time difference between previous block and current block
+            int64_t currentBlockTime = currentBlock.timestamp;
+            int64_t diff = ((lastBlockTime) - (currentBlockTime));
+            // Increment the actual timespan
+            nActualTimespan += diff;
+        }
+        // Set lastBlockTime to the block time for the block in current iteration
+        lastBlockTime = currentBlock.timestamp;
+        
+        if (previousBlock == NULL) { assert(currentBlock); break; }
+        currentBlock = previousBlocks[uint256_obj(currentBlock.prevBlock)];
+    }
+    
+    // darkTarget is the difficulty
+    long double darkTarget = sumTargets / (long double)(blockCount);
+    
+    // nTargetTimespan is the time that the CountBlocks should have taken to be generated.
+    long double nTargetTimespan = (blockCount - 1)* (2.5*60);
+    
+    // Limit the re-adjustment to 3x or 0.33x
+    // We don't want to increase/decrease diff too much.
+    if (nActualTimespan < nTargetTimespan/3.0f)
+        nActualTimespan = nTargetTimespan/3.0f;
+    if (nActualTimespan > nTargetTimespan*3.0f)
+        nActualTimespan = nTargetTimespan*3.0f;
+    
+    // Calculate the new difficulty based on actual and target timespan.
+    darkTarget *= nActualTimespan / nTargetTimespan;
+    
+    // If calculated difficulty is lower than the minimal diff, set the new difficulty to be the minimal diff.
+    if (darkTarget > MAX_PROOF_OF_WORK){
+        darkTarget = MAX_PROOF_OF_WORK;
+    }
+    
+    // Return the new diff.
+    return (uint32_t)darkTarget;
 }
 
 // recursively walks the merkle tree in depth first order, calling leaf(hash, flag) for each stored hash, and

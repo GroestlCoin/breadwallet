@@ -1051,14 +1051,14 @@ static const char *dns_seeds[] = {
 // NOTE: this is only accurate for the last two weeks worth of blocks, other timestamps are estimated from checkpoints
 - (NSTimeInterval)timestampForBlockHeight:(uint32_t)blockHeight
 {
-    if (blockHeight == TX_UNCONFIRMED) return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + 10*60; //next block
+    if (blockHeight == TX_UNCONFIRMED) return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + 150; //next block
     
-    if (blockHeight >= self.lastBlockHeight) { // future block, assume 10 minutes per block after last block
-        return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + (blockHeight - self.lastBlockHeight)*10*60;
+    if (blockHeight >= self.lastBlockHeight) { // future block, assume 2.5 minutes per block after last block
+        return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + (blockHeight - self.lastBlockHeight)*150;
     }
     
     if (_blocks.count > 0) {
-        if (blockHeight >= self.lastBlockHeight - BLOCK_DIFFICULTY_INTERVAL*2) { // recent block we have the header for
+        if (blockHeight >= self.lastBlockHeight - DGW_PAST_BLOCKS_MAX) { // recent block we have the header for
             BRMerkleBlock *block = self.lastBlock;
             
             while (block && block.height > blockHeight) block = self.blocks[uint256_obj(block.prevBlock)];
@@ -1698,7 +1698,7 @@ static const char *dns_seeds[] = {
     
     NSValue *blockHash = uint256_obj(block.blockHash), *prevBlock = uint256_obj(block.prevBlock);
     BRMerkleBlock *prev = self.blocks[prevBlock];
-    uint32_t transitionTime = 0, txTime = 0;
+    uint32_t txTime = 0;
     UInt256 checkpoint = UINT256_ZERO;
     BOOL syncDone = NO;
     
@@ -1723,40 +1723,25 @@ static const char *dns_seeds[] = {
     block.height = prev.height + 1;
     txTime = block.timestamp/2 + prev.timestamp/2;
     
-    if ((block.height % BLOCK_DIFFICULTY_INTERVAL) == 0) { // hit a difficulty transition, find previous transition time
+    if ((block.height % 1000) == 0) { //free up some memory from time to time
+        
         BRMerkleBlock *b = block;
         
-        for (uint32_t i = 0; b && i < BLOCK_DIFFICULTY_INTERVAL; i++) {
+        for (uint32_t i = 0; b && i < (DGW_PAST_BLOCKS_MAX + 50); i++) {
             b = self.blocks[uint256_obj(b.prevBlock)];
         }
-        
-        [[BRMerkleBlockEntity context] performBlock:^{ // save transition blocks to core data immediately
-            @autoreleasepool {
-                BRMerkleBlockEntity *e = [BRMerkleBlockEntity objectsMatching:@"blockHash == %@",
-                                          [NSData dataWithBytes:b.blockHash.u8 length:sizeof(UInt256)]].lastObject;
-                
-                if (! e) e = [BRMerkleBlockEntity managedObject];
-                [e setAttributesFromBlock:b];
-            }
-            
-            [BRMerkleBlockEntity saveContext]; // persist core data to disk
-        }];
-        
-        transitionTime = b.timestamp;
         
         while (b) { // free up some memory
             b = self.blocks[uint256_obj(b.prevBlock)];
-            
-            if (b && (b.height % BLOCK_DIFFICULTY_INTERVAL) != 0) {
-                [self.blocks removeObjectForKey:uint256_obj(b.blockHash)];
-            }
+            if (b) [self.blocks removeObjectForKey:uint256_obj(b.prevBlock)];
         }
     }
     
-    // verify block difficulty
-    if (! [block verifyDifficultyFromPreviousBlock:prev andTransitionTime:transitionTime]) {
-        NSLog(@"%@:%d relayed block with invalid difficulty target %x, blockHash: %@", peer.host, peer.port,
-              block.target, blockHash);
+    // verify block difficulty if block is past last checkpoint
+    if ((block.height > (checkpoint_array[CHECKPOINT_COUNT - 1].height + DGW_PAST_BLOCKS_MAX)) &&
+        ![block verifyDifficultyWithPreviousBlocks:self.blocks]) {
+        NSLog(@"%@:%d relayed block with invalid difficulty height %d target %x, blockHash: %@", peer.host, peer.port,
+              block.height,block.target, blockHash);
         [self peerMisbehavin:peer];
         return;
     }
