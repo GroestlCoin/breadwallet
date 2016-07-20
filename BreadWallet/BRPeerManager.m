@@ -50,7 +50,7 @@
 #define GENESIS_BLOCK_HASH   (*(UInt256 *)@(checkpoint_array[0].hash).hexToData.reverse.bytes)
 #define SYNC_STARTHEIGHT_KEY @"SYNC_STARTHEIGHT"
 
-#if BITCOIN_TESTNET
+#if GROESTLCOIN_TESTNET
 
 static const struct { uint32_t height; const char *hash; uint32_t timestamp; uint32_t target; } checkpoint_array[] = {
     {      0, "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943", 1296688602, 0x1d00ffff },
@@ -255,7 +255,7 @@ static const char *dns_seeds[] = {
                         
             for (NSArray *a in peers) [_peers addObjectsFromArray:a];
 
-#if BITCOIN_TESTNET
+#if GROESTLCOIN_TESTNET
             [self sortPeers];
             return _peers;
 #endif

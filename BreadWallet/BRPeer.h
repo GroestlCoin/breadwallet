@@ -26,7 +26,7 @@
 #import <Foundation/Foundation.h>
 
 
-#if BITCOIN_TESTNET
+#if GROESTLCOIN_TESTNET
 #define BITCOIN_STANDARD_PORT 18333
 #else
 #define BITCOIN_STANDARD_PORT 8333

@@ -31,7 +31,7 @@
 #import "BRPhoneWCSessionManager.h"
 #import <WebKit/WebKit.h>
 
-#if BITCOIN_TESTNET
+#if GROESTLCOIN_TESTNET
 #pragma message "testnet build"
 #endif
 

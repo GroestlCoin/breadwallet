@@ -1072,7 +1072,7 @@ services:(uint64_t)services
                         
                         // consume one byte at a time, up to the magic number that starts a new message header
                         while (self.msgHeader.length >= sizeof(uint32_t) &&
-                               [self.msgHeader UInt32AtOffset:0] != BITCOIN_MAGIC_NUMBER) {
+                               [self.msgHeader UInt32AtOffset:0] != GROESTLCOIN_MAGIC_NUMBER) {
 #if DEBUG
                             printf("%c", *(const char *)self.msgHeader.bytes);
 #endif
