@@ -29,7 +29,9 @@
 #import "BRMnemonic.h"
 
 #define BTC          @"\xC9\x83"     // capital B with stroke (utf-8)
+#define GRS          @"\xC7\xA4"     // capital G with stroke (utf-8)
 #define BITS         @"\xC6\x80"     // lowercase b with stroke (utf-8)
+#define GRITS        @"\xC7\xA5"     // lowercase g with stroke (utf-8)
 #define NARROW_NBSP  @"\xE2\x80\xAF" // narrow no-break space (utf-8)
 #define LDQUOTE      @"\xE2\x80\x9C" // left double quote (utf-8)
 #define RDQUOTE      @"\xE2\x80\x9D" // right double quote (utf-8)
