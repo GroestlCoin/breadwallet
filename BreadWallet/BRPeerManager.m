@@ -933,7 +933,7 @@ static const char *dns_seeds[] = {
             [self syncStopped];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *error = [NSError errorWithDomain:@"BreadWallet" code:1
+                NSError *error = [NSError errorWithDomain:@"GroestlWallet" code:1
                                                  userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"no peers found", nil)}];
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerSyncFailedNotification
@@ -994,7 +994,7 @@ static const char *dns_seeds[] = {
     if (! transaction.isSigned) {
         if (completion) {
             [[BREventManager sharedEventManager] saveEvent:@"peer_manager:not_signed"];
-            completion([NSError errorWithDomain:@"BreadWallet" code:401 userInfo:@{NSLocalizedDescriptionKey:
+            completion([NSError errorWithDomain:@"GroestlWallet" code:401 userInfo:@{NSLocalizedDescriptionKey:
                                                                                        NSLocalizedString(@"bitcoin transaction not signed", nil)}]);
         }
         
@@ -1003,7 +1003,7 @@ static const char *dns_seeds[] = {
     else if (! self.connected && self.connectFailures >= MAX_CONNECT_FAILURES) {
         if (completion) {
             [[BREventManager sharedEventManager] saveEvent:@"peer_manager:not_connected"];
-            completion([NSError errorWithDomain:@"BreadWallet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
+            completion([NSError errorWithDomain:@"GroestlWallet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
                                                                                          NSLocalizedString(@"not connected to the bitcoin network", nil)}]);
         }
         
@@ -1104,7 +1104,7 @@ static const char *dns_seeds[] = {
     
     if (callback) {
         [[BREventManager sharedEventManager] saveEvent:@"peer_manager:tx_canceled_timeout"];
-        callback([NSError errorWithDomain:@"BreadWallet" code:BITCOIN_TIMEOUT_CODE userInfo:@{NSLocalizedDescriptionKey:
+        callback([NSError errorWithDomain:@"GroestlWallet" code:BITCOIN_TIMEOUT_CODE userInfo:@{NSLocalizedDescriptionKey:
                                                                                                   NSLocalizedString(@"transaction canceled, network timeout", nil)}]);
     }
 }
@@ -1911,7 +1911,7 @@ static const char *dns_seeds[] = {
     
     if (callback && ! [manager.wallet transactionIsValid:tx]) {
         [self.publishedTx removeObjectForKey:hash];
-        error = [NSError errorWithDomain:@"BreadWallet" code:401
+        error = [NSError errorWithDomain:@"GroestlWallet" code:401
                                 userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"double spend", nil)}];
     }
     else if (tx && ! [manager.wallet transactionForHash:txHash] && [manager.wallet registerTransaction:tx]) {
