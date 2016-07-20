@@ -40,7 +40,7 @@
 #define MAX_GETDATA_HASHES 50000
 #define ENABLED_SERVICES   0     // we don't provide full blocks to remote nodes
 #define PROTOCOL_VERSION   70013
-#define MIN_PROTO_VERSION  70002 // peers earlier than this protocol version not supported (need v0.9 txFee relay rules)
+#define MIN_PROTO_VERSION  70001 // peers earlier than this protocol version not supported (need v0.9 txFee relay rules)
 #define LOCAL_HOST         0x7f000001
 #define CONNECT_TIMEOUT    3.0
 
@@ -86,7 +86,7 @@ typedef enum : uint32_t {
     if (! (self = [super init])) return nil;
 
     _address = address;
-    _port = (port == 0) ? BITCOIN_STANDARD_PORT : port;
+    _port = (port == 0) ? GROESTLCOIN_STANDARD_PORT : port;
     return self;
 }
 
@@ -296,7 +296,7 @@ services:(uint64_t)services
     [msg appendUInt64:self.services]; // services of remote peer
     [msg appendBytes:&_address length:sizeof(_address)]; // IPv6 address of remote peer
     [msg appendBytes:&port length:sizeof(port)]; // port of remote peer
-    [msg appendNetAddress:LOCAL_HOST port:BITCOIN_STANDARD_PORT services:ENABLED_SERVICES]; // net address of local peer
+    [msg appendNetAddress:LOCAL_HOST port:GROESTLCOIN_STANDARD_PORT services:ENABLED_SERVICES]; // net address of local peer
     self.localNonce = ((uint64_t)arc4random() << 32) | (uint64_t)arc4random(); // random nonce
     [msg appendUInt64:self.localNonce];
     [msg appendString:USER_AGENT]; // user agent

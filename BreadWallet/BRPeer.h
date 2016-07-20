@@ -27,16 +27,16 @@
 
 
 #if GROESTLCOIN_TESTNET
-#define BITCOIN_STANDARD_PORT 18333
+#define GROESTLCOIN_STANDARD_PORT 17777
 #else
-#define BITCOIN_STANDARD_PORT 8333
+#define GROESTLCOIN_STANDARD_PORT 1331
 #endif
 
 #define BITCOIN_TIMEOUT_CODE  1001
 
 #define SERVICES_NODE_NETWORK 0x01 // services value indicating a node carries full blocks, not just headers
 #define SERVICES_NODE_BLOOM   0x04 // BIP111: https://github.com/bitcoin/bips/blob/master/bip-0111.mediawiki
-#define USER_AGENT            [NSString stringWithFormat:@"/breadwallet:%@/",\
+#define USER_AGENT            [NSString stringWithFormat:@"/groestlwallet:%@/",\
                                NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]]
 
 // explanation of message types at: https://en.bitcoin.it/wiki/Protocol_specification
