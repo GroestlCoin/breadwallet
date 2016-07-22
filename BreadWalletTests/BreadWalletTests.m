@@ -228,44 +228,34 @@ UInt256 divide (UInt256 a,UInt256 b)
                   @"testUInt256ShiftRight");
 }
 
-//- (void)testUInt256Divide
-//{
-//    UInt256 a = ((UInt256) { .u64 = { 0, 0, 3, 0 } });
-//    UInt256 b = ((UInt256) { .u64 = { 0, 2, 0, 0 } });
-//    UInt256 c = ((UInt256) { .u64 = { 0xF200000000000000, 0x00FFFFFFFFFFFFFF, 0, 0 } });
-//    UInt256 d = divide(a, b);
-//    XCTAssertTrue(uint256_eq(d, c),
-//                  @"testUInt256Divide");
-//}
-
 #pragma mark - testGroestl
 
-//- (void)testGroestlFull
-//{
-//    UInt512 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-//                  dataUsingEncoding:NSUTF8StringEncoding].groestl512;
-//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa36619652535835a22ab0be05a81ea15f47ebaed9c236a79f354f699e45b6a7aebc9648695d".hexToData.bytes, md),
-//                  @"[NSData groestl512]");
-//}
-//
-//- (void)testGroestl
-//{
-//    UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-//                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL;
-//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa3661965253".hexToData.bytes, md),
-//                  @"[NSData GROESTL]");
-//
-//}
-//
-//- (void)testGroestl_2
-//{
-//        UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-//                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL_2;
-//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"55415989225c5c902f5003679a98fac117555890a7c3119ab1d570c89e77b072".hexToData.bytes, md),
-//                  @"[NSData GROESTL_2]");
-//    
-//}
-//
+- (void)testGroestlFull
+{
+    UInt512 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+                  dataUsingEncoding:NSUTF8StringEncoding].groestl512;
+    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa36619652535835a22ab0be05a81ea15f47ebaed9c236a79f354f699e45b6a7aebc9648695d".hexToData.bytes, md),
+                  @"[NSData groestl512]");
+}
+
+- (void)testGroestl
+{
+    UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL;
+    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa3661965253".hexToData.bytes, md),
+                  @"[NSData GROESTL]");
+
+}
+
+- (void)testGroestl_2
+{
+        UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL_2;
+    XCTAssertTrue(uint256_eq(*(UInt256 *)@"55415989225c5c902f5003679a98fac117555890a7c3119ab1d570c89e77b072".hexToData.bytes, md),
+                  @"[NSData GROESTL_2]");
+    
+}
+
 //
 //#pragma mark - testBase58
 //
