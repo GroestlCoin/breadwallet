@@ -259,7 +259,7 @@
     BOOL req = (_paymentRequest) ? YES : NO;
     UIActionSheet *actionSheet = [UIActionSheet new];
 
-    actionSheet.title = [NSString stringWithFormat:NSLocalizedString(@"Receive bitcoins at this address: %@", nil),
+    actionSheet.title = [NSString stringWithFormat:NSLocalizedString(@"Receive groestlcoins at this address: %@", nil),
                self.paymentAddress];
     actionSheet.delegate = self;
     [actionSheet addButtonWithTitle:(req) ? NSLocalizedString(@"copy request to clipboard", nil) :
@@ -390,7 +390,7 @@ error:(NSError *)error
     
     if (amount < manager.wallet.minOutputAmount) {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"amount too small", nil)
-          message:[NSString stringWithFormat:NSLocalizedString(@"bitcoin payments can't be less than %@", nil),
+          message:[NSString stringWithFormat:NSLocalizedString(@"groestlcoin payments can't be less than %@", nil),
                    [manager stringForAmount:manager.wallet.minOutputAmount]]
           delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
         [BREventManager saveEvent:@"receive:amount_too_small"];

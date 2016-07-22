@@ -996,7 +996,7 @@ static const char *dns_seeds[] = {
         if (completion) {
             [[BREventManager sharedEventManager] saveEvent:@"peer_manager:not_signed"];
             completion([NSError errorWithDomain:@"GroestlWallet" code:401 userInfo:@{NSLocalizedDescriptionKey:
-                                                                                       NSLocalizedString(@"bitcoin transaction not signed", nil)}]);
+                                                                                       NSLocalizedString(@"groestlcoin transaction not signed", nil)}]);
         }
         
         return;
@@ -1005,7 +1005,7 @@ static const char *dns_seeds[] = {
         if (completion) {
             [[BREventManager sharedEventManager] saveEvent:@"peer_manager:not_connected"];
             completion([NSError errorWithDomain:@"GroestlWallet" code:-1009 userInfo:@{NSLocalizedDescriptionKey:
-                                                                                         NSLocalizedString(@"not connected to the bitcoin network", nil)}]);
+                                                                                         NSLocalizedString(@"not connected to the groestlcoin network", nil)}]);
         }
         
         return;
@@ -1158,7 +1158,7 @@ static const char *dns_seeds[] = {
                     if (success) {
                         p.synced = YES;
                         [self removeUnrelayedTransactions];
-                        [p sendGetaddrMessage]; // request a list of other bitcoin peers
+                        [p sendGetaddrMessage]; // request a list of other groestlcoin peers
                     }
                     
                     if (p == self.downloadPeer) {
@@ -1421,7 +1421,7 @@ static const char *dns_seeds[] = {
                 if (! success) return;
                 peer.synced = YES;
                 [self removeUnrelayedTransactions];
-                [peer sendGetaddrMessage]; // request a list of other bitcoin peers
+                [peer sendGetaddrMessage]; // request a list of other groestlcoin peers
             }];
         }];
         

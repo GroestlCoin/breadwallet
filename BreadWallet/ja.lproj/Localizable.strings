@@ -92,7 +92,7 @@
 "Groestlcoin address" = "ビットコインアドレス";
 
 /* No comment provided by engineer. */
-"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with '1' or '3'." = "ビットコインアドレスをクリップボードにコピーすることもできます。\nビットコインアドレスは\n常に '1' または '3' で始まります。";
+"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "ビットコインアドレスをクリップボードにコピーすることもできます。\nビットコインアドレスは\n常に '1' または '3' で始まります。";
 
 /* No comment provided by engineer. */
 "groestlcoin network fee" = "ビットコインネットワーク手数料";

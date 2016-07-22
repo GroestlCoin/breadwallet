@@ -571,7 +571,7 @@ static NSString *dateFormat(NSString *template)
             switch (adjustedRow) {
                 case 0:
                     cell.textLabel.text = NSLocalizedString(@"Buy Bitcoin", nil);
-                    cell.imageView.image = [UIImage imageNamed:@"bitcoin-buy-blue-small"];
+                    cell.imageView.image = [UIImage imageNamed:@"groestlcoin-buy-blue-small"];
                     break;
                     
                 case 1:

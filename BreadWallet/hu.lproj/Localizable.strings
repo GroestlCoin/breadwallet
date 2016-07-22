@@ -92,7 +92,7 @@
 "Groestlcoin address" = "Groestlcoin cím";
 
 /* No comment provided by engineer. */
-"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with '1' or '3'." = "Groestlcoin címeket a vágólapra is lehet másolni. Egy groestlcoin cím mindig '1'-gyel vagy '3'-mal kezdődik.";
+"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Groestlcoin címeket a vágólapra is lehet másolni. Egy groestlcoin cím mindig '1'-gyel vagy '3'-mal kezdődik.";
 
 /* No comment provided by engineer. */
 "groestlcoin network fee" = "groestlcoin hálózati díj";

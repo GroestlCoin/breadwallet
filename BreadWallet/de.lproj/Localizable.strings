@@ -92,7 +92,7 @@
 "Groestlcoin address" = "Groestlcoin-Adresse";
 
 /* No comment provided by engineer. */
-"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with '1' or '3'." = "Groestlcoin-Adressen können auch in die Zwischenablage kopiert werden. Eine Groestlcoin-Adresse beginnt immer mit '1' oder '3'.";
+"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Groestlcoin-Adressen können auch in die Zwischenablage kopiert werden. Eine Groestlcoin-Adresse beginnt immer mit '1' oder '3'.";
 
 /* No comment provided by engineer. */
 "groestlcoin network fee" = "Transaktionsgebühr";

@@ -195,7 +195,7 @@
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
                   message:NSLocalizedString(@"DEVICE SECURITY COMPROMISED\n"
                                             "Any 'jailbreak' app can access any other app's keychain data "
-                                            "(and steal your bitcoins). "
+                                            "(and steal your groestlcoins). "
                                             "Wipe this wallet immediately and restore on a secure device.", nil)
                  delegate:self cancelButtonTitle:NSLocalizedString(@"ignore", nil)
                  otherButtonTitles:NSLocalizedString(@"wipe", nil), nil] show];
@@ -204,7 +204,7 @@
                 [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
                   message:NSLocalizedString(@"DEVICE SECURITY COMPROMISED\n"
                                             "Any 'jailbreak' app can access any other app's keychain data "
-                                            "(and steal your bitcoins).", nil)
+                                            "(and steal your groestlcoins).", nil)
                   delegate:self cancelButtonTitle:NSLocalizedString(@"ignore", nil)
                   otherButtonTitles:NSLocalizedString(@"close app", nil), nil] show];
             }
@@ -369,7 +369,7 @@
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
           message:NSLocalizedString(@"DEVICE SECURITY COMPROMISED\n"
                                     "Any 'jailbreak' app can access any other app's keychain data "
-                                    "(and steal your bitcoins). "
+                                    "(and steal your groestlcoins). "
                                     "Wipe this wallet immediately and restore on a secure device.", nil)
           delegate:self cancelButtonTitle:NSLocalizedString(@"ignore", nil)
           otherButtonTitles:NSLocalizedString(@"wipe", nil), nil] show];
@@ -378,7 +378,7 @@
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
           message:NSLocalizedString(@"DEVICE SECURITY COMPROMISED\n"
                                     "Any 'jailbreak' app can access any other app's keychain data "
-                                    "(and steal your bitcoins).", nil)
+                                    "(and steal your groestlcoins).", nil)
           delegate:self cancelButtonTitle:NSLocalizedString(@"ignore", nil)
           otherButtonTitles:NSLocalizedString(@"close app", nil), nil] show];
     }
@@ -523,7 +523,7 @@
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", nil)
           message:[NSString stringWithFormat:@"\n%@\n\n%@\n\n%@\n",
                    [NSLocalizedString(@"\nDO NOT let anyone see your recovery\n"
-                                      "phrase or they can spend your bitcoins.\n", nil)
+                                      "phrase or they can spend your groestlcoins.\n", nil)
                     stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]],
                    [NSLocalizedString(@"\nNEVER type your recovery phrase into\n"
                                       "password managers or elsewhere.\n"
@@ -765,7 +765,7 @@
     [defs setDouble:now forKey:BACKUP_DIALOG_TIME_KEY];
     
     [[[UIAlertView alloc]
-      initWithTitle:(first) ? NSLocalizedString(@"you received bitcoin!", nil) : NSLocalizedString(@"IMPORTANT", nil)
+      initWithTitle:(first) ? NSLocalizedString(@"you received groestlcoin!", nil) : NSLocalizedString(@"IMPORTANT", nil)
       message:[NSString stringWithFormat:NSLocalizedString(@"\n%@\n\nif you ever lose your phone, you will need it to "
                                                            "recover your wallet", nil),
                (first) ? NSLocalizedString(@"next, write down your recovery phrase", nil) :
