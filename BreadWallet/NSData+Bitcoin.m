@@ -634,4 +634,7 @@ void PBKDF2(void *dk, size_t dklen, void (*hash)(void *, const void *, size_t), 
     return [NSString base58WithData:self];
 }
 
+
+
+
 @end

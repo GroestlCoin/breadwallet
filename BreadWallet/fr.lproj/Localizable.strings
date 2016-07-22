@@ -1,5 +1,5 @@
 /* No comment provided by engineer. */
-"%@ is for 'bits'. %@ = 1 groestlcoin." = "%1$@ est pour 'bits'. %2$@ = 1 groestlcoin.";
+"%@ is for 'mgrs'. %@ = 1 groestlcoin." = "%1$@ est pour 'mgrs'. %2$@ = 1 groestlcoin.";
 
 /* No comment provided by engineer. */
 "%@ is not allowed to access the camera" = "%@ n'est pas autorisé à accéder à l'appareil photo";

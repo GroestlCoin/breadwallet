@@ -61,33 +61,210 @@
     [super tearDown];
 }
 
+UInt256 setCompact(int32_t nCompact)
+{
+    int nSize = nCompact >> 24;
+    UInt256 nWord = UINT256_ZERO;
+    nWord.u32[0] = nCompact & 0x007fffff;
+    if (nSize <= 3) {
+        nWord = shiftRight(nWord, 8 * (3 - nSize));
+    } else {
+        nWord = shiftLeft(nWord, 8 * (nSize - 3));
+    }
+    return nWord;
+}
+
+uint8_t bits(UInt256 number)
+{
+    for (int pos = 8 - 1; pos >= 0; pos--) {
+        if (number.u32[pos]) {
+            for (int bits = 31; bits > 0; bits--) {
+                if (number.u32[pos] & 1 << bits)
+                    return 32 * pos + bits + 1;
+            }
+            return 32 * pos + 1;
+        }
+    }
+    return 0;
+}
+
+int32_t getCompact(UInt256 number)
+{
+    int nSize = (bits(number) + 7) / 8;
+    uint32_t nCompact = 0;
+    if (nSize <= 3) {
+        nCompact = number.u32[0] << 8 * (3 - nSize);
+    } else {
+        UInt256 bn = shiftRight(number, 8 * (nSize - 3));
+        nCompact = bn.u32[0];
+    }
+    // The 0x00800000 bit denotes the sign.
+    // Thus, if it is already set, divide the mantissa by 256 and increase the exponent.
+    if (nCompact & 0x00800000) {
+        nCompact >>= 8;
+        nSize++;
+    }
+    assert((nCompact & ~0x007fffff) == 0);
+    assert(nSize < 256);
+    nCompact |= nSize << 24;
+    return nCompact;
+}
+
+UInt256 add(UInt256 a, UInt256 b) {
+    uint64_t carry = 0;
+    UInt256 r = UINT256_ZERO;
+    for (int i = 0; i < 8; i++) {
+        uint64_t sum = (uint64_t)a.u32[i] + (uint64_t)b.u32[i] + carry;
+        r.u32[i] = (uint32_t)sum;
+        carry = sum >> 32;
+    }
+    return r;
+}
+
+UInt256 addOne(UInt256 a) {
+    UInt256 r = ((UInt256) { .u64 = { 1, 0, 0, 0 } });
+    return add(a, r);
+}
+
+UInt256 neg(UInt256 a) {
+    UInt256 r = UINT256_ZERO;
+    for (int i = 0; i < 4; i++) {
+        r.u64[i] = ~a.u64[i];
+    }
+    return r;
+}
+
+UInt256 subtract(UInt256 a, UInt256 b) {
+    return add(a,addOne(neg(b)));
+}
+
+UInt256 shiftLeft(UInt256 a, uint8_t bits) {
+    UInt256 r = UINT256_ZERO;
+    int k = bits / 64;
+    bits = bits % 64;
+    for (int i = 0; i < 4; i++) {
+        if (i + k + 1 < 4 && bits != 0)
+            r.u64[i + k + 1] |= (a.u64[i] >> (64 - bits));
+        if (i + k < 4)
+            r.u64[i + k] |= (a.u64[i] << bits);
+    }
+    return r;
+}
+
+UInt256 shiftRight(UInt256 a, uint8_t bits) {
+    UInt256 r = UINT256_ZERO;
+    int k = bits / 64;
+    bits = bits % 64;
+    for (int i = 0; i < 4; i++) {
+        if (i - k - 1 >= 0 && bits != 0)
+            r.u64[i - k - 1] |= (a.u64[i] << (64 - bits));
+        if (i - k >= 0)
+            r.u64[i - k] |= (a.u64[i] >> bits);
+    }
+    return r;
+}
+
+UInt256 divide (UInt256 a,UInt256 b)
+{
+    UInt256 div = b;     // make a copy, so we can shift.
+    UInt256 num = a;     // make a copy, so we can subtract.
+    UInt256 r = UINT256_ZERO;                  // the quotient.
+    int num_bits = bits(num);
+    int div_bits = bits(div);
+    assert (div_bits != 0);
+    if (div_bits > num_bits) // the result is certainly 0.
+        return r;
+    int shift = num_bits - div_bits;
+    div = shiftLeft(div, shift); // shift so that div and nun align.
+    while (shift >= 0) {
+        if (uint256_supeq(num,div)) {
+            num = subtract(num,div);
+            r.u32[shift / 32] |= (1 << (shift & 31)); // set a bit of the result.
+        }
+        div = shiftRight(div, 1); // shift back.
+        shift--;
+    }
+    // num now contains the remainder of the division.
+    return r;
+}
+
+- (void)testUInt256Add
+{
+    UInt256 a = ((UInt256) { .u64 = { 0xFFFFFFFFFFFFFFFF, 2, 0, 0 } });
+    UInt256 b = ((UInt256) { .u64 = { 1, 0, 0, 0 } });
+    UInt256 c = ((UInt256) { .u64 = { 0, 3, 0, 0 } });
+    UInt256 d = add(a, b);
+    XCTAssertTrue(uint256_eq(d, c),
+                  @"testUInt256Add");
+}
+
+- (void)testUInt256Subtract
+{
+    UInt256 a = ((UInt256) { .u64 = { 0, 2, 0, 0 } });
+    UInt256 b = ((UInt256) { .u64 = { 0xFFFFFFFFFFFFFFF2,0, 0, 0 } });
+    UInt256 c = ((UInt256) { .u64 = { 0xE, 1, 0, 0 } });
+    UInt256 d = subtract(a, b);
+    XCTAssertTrue(uint256_eq(d, c),
+                  @"testUInt256Subtract");
+}
+
+- (void)testUInt256ShiftLeft
+{
+    UInt256 a = ((UInt256) { .u64 = { 0, 0xFFFFFFFFFFFFFFF2, 0, 0 } });
+    int b = 8;
+    UInt256 c = ((UInt256) { .u64 = { 0, 0xFFFFFFFFFFFFF200, 0xFF, 0 } });
+    UInt256 d = shiftLeft(a, b);
+    XCTAssertTrue(uint256_eq(d, c),
+                  @"testUInt256ShiftLeft");
+}
+
+- (void)testUInt256ShiftRight
+{
+    UInt256 a = ((UInt256) { .u64 = { 0, 0xFFFFFFFFFFFFFFF2, 0, 0 } });
+    int b = 8;
+    UInt256 c = ((UInt256) { .u64 = { 0xF200000000000000, 0x00FFFFFFFFFFFFFF, 0, 0 } });
+    UInt256 d = shiftRight(a, b);
+    XCTAssertTrue(uint256_eq(d, c),
+                  @"testUInt256ShiftRight");
+}
+
+//- (void)testUInt256Divide
+//{
+//    UInt256 a = ((UInt256) { .u64 = { 0, 0, 3, 0 } });
+//    UInt256 b = ((UInt256) { .u64 = { 0, 2, 0, 0 } });
+//    UInt256 c = ((UInt256) { .u64 = { 0xF200000000000000, 0x00FFFFFFFFFFFFFF, 0, 0 } });
+//    UInt256 d = divide(a, b);
+//    XCTAssertTrue(uint256_eq(d, c),
+//                  @"testUInt256Divide");
+//}
+
 #pragma mark - testGroestl
 
-- (void)testGroestlFull
-{
-    UInt512 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-                  dataUsingEncoding:NSUTF8StringEncoding].groestl512;
-    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa36619652535835a22ab0be05a81ea15f47ebaed9c236a79f354f699e45b6a7aebc9648695d".hexToData.bytes, md),
-                  @"[NSData groestl512]");
-}
-
-- (void)testGroestl
-{
-    UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL;
-    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa3661965253".hexToData.bytes, md),
-                  @"[NSData GROESTL]");
-
-}
-
-- (void)testGroestl_2
-{
-        UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
-                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL_2;
-    XCTAssertTrue(uint256_eq(*(UInt256 *)@"55415989225c5c902f5003679a98fac117555890a7c3119ab1d570c89e77b072".hexToData.bytes, md),
-                  @"[NSData GROESTL_2]");
-    
-}
+//- (void)testGroestlFull
+//{
+//    UInt512 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+//                  dataUsingEncoding:NSUTF8StringEncoding].groestl512;
+//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa36619652535835a22ab0be05a81ea15f47ebaed9c236a79f354f699e45b6a7aebc9648695d".hexToData.bytes, md),
+//                  @"[NSData groestl512]");
+//}
+//
+//- (void)testGroestl
+//{
+//    UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+//                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL;
+//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"eefdf4c9d6b6fd53390049388de8974525b406206114a8885016aa3661965253".hexToData.bytes, md),
+//                  @"[NSData GROESTL]");
+//
+//}
+//
+//- (void)testGroestl_2
+//{
+//        UInt256 md = [@"Groestl is an Austrian dish, usually made of leftover potatoes and pork, cut into slice."
+//                               dataUsingEncoding:NSUTF8StringEncoding].GROESTL_2;
+//    XCTAssertTrue(uint256_eq(*(UInt256 *)@"55415989225c5c902f5003679a98fac117555890a7c3119ab1d570c89e77b072".hexToData.bytes, md),
+//                  @"[NSData GROESTL_2]");
+//    
+//}
 //
 //
 //#pragma mark - testBase58
@@ -1662,21 +1839,21 @@
 //    NSLog(@"commonName:%@", req.commonName);
 //    XCTAssertEqualObjects(req.commonName, @"payments.bitonic.eu",  @"[BRPaymentProtocolRequest commonName]");
 //}
-
-#pragma mark - UIImage+Utils
-
-- (void)testUIImageUtils
-{
-    
-}
-
-#pragma mark - performance
-
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
-}
+//
+//#pragma mark - UIImage+Utils
+//
+//- (void)testUIImageUtils
+//{
+//
+//}
+//
+//#pragma mark - performance
+//
+//- (void)testPerformanceExample {
+//    // This is an example of a performance test case.
+//    [self measureBlock:^{
+//        // Put the code you want to measure the time of here.
+//    }];
+//}
 
 @end

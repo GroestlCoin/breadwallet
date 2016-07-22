@@ -1,5 +1,5 @@
 /* No comment provided by engineer. */
-"%@ is for 'bits'. %@ = 1 groestlcoin." = "%1$@는 'bits'라고 합니다. %2$@ = 1비트코인";
+"%@ is for 'mgrs'. %@ = 1 groestlcoin." = "%1$@는 'mgrs'라고 합니다. %2$@ = 1비트코인";
 
 /* No comment provided by engineer. */
 "%@ is not allowed to access the camera" = "%@에게 카메라 접근 권한이 없습니다";

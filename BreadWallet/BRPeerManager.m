@@ -513,7 +513,8 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
     { 897120, "0000000011108b0bd659edd60cc3410bbbf50cae55bcd61f382ea101ae1b5d38", 1450932136, 0x010c0000u },
     { 899136, "000000000f1df766ce9e0c24dd5e2a3ca05fc0dd5db2647c098a60733b61aee7", 1451059389, 0x010b0000u },
     { 901152, "000000000c558185e8bde3b2781730b32dafea784d4b86c73b46e79541445d87", 1451186413, 0x010c0000u },
-    { 903168, "0000000014ad7434ee93115bc99d0ce95d50a72ab0934014ac59053e42be259e", 1451313482, 0x010b0000u }
+    { 903168, "0000000014ad7434ee93115bc99d0ce95d50a72ab0934014ac59053e42be259e", 1451313482, 0x010b0000u },
+    { 1070800, "000000000776c0aa6462bf8da2794f51e22fa99185bded45f73f08390decb810", 1461889675, 0x01c247361u }
     
 };
 
@@ -1051,10 +1052,10 @@ static const char *dns_seeds[] = {
 // NOTE: this is only accurate for the last two weeks worth of blocks, other timestamps are estimated from checkpoints
 - (NSTimeInterval)timestampForBlockHeight:(uint32_t)blockHeight
 {
-    if (blockHeight == TX_UNCONFIRMED) return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + 150; //next block
+    if (blockHeight == TX_UNCONFIRMED) return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + 60; //next block
     
-    if (blockHeight >= self.lastBlockHeight) { // future block, assume 2.5 minutes per block after last block
-        return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + (blockHeight - self.lastBlockHeight)*150;
+    if (blockHeight >= self.lastBlockHeight) { // future block, assume 1 minute per block after last block
+        return (self.lastBlock.timestamp - NSTimeIntervalSince1970) + (blockHeight - self.lastBlockHeight)*60;
     }
     
     if (_blocks.count > 0) {
@@ -1723,19 +1724,19 @@ static const char *dns_seeds[] = {
     block.height = prev.height + 1;
     txTime = block.timestamp/2 + prev.timestamp/2;
     
-    if ((block.height % 1000) == 0) { //free up some memory from time to time
-        
-        BRMerkleBlock *b = block;
-        
-        for (uint32_t i = 0; b && i < (DGW_PAST_BLOCKS_MAX + 50); i++) {
-            b = self.blocks[uint256_obj(b.prevBlock)];
-        }
-        
-        while (b) { // free up some memory
-            b = self.blocks[uint256_obj(b.prevBlock)];
-            if (b) [self.blocks removeObjectForKey:uint256_obj(b.prevBlock)];
-        }
-    }
+//    if ((block.height % 1000) == 0) { //free up some memory from time to time
+//        
+//        BRMerkleBlock *b = block;
+//        
+//        for (uint32_t i = 0; b && i < (DGW_PAST_BLOCKS_MAX + 50); i++) {
+//            b = self.blocks[uint256_obj(b.prevBlock)];
+//        }
+//        
+//        while (b) { // free up some memory
+//            b = self.blocks[uint256_obj(b.prevBlock)];
+//            if (b) [self.blocks removeObjectForKey:uint256_obj(b.prevBlock)];
+//        }
+//    }
     
     // verify block difficulty if block is past last checkpoint
     if ((block.height > (checkpoint_array[CHECKPOINT_COUNT - 1].height + DGW_PAST_BLOCKS_MAX)) &&
