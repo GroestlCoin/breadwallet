@@ -76,7 +76,7 @@ static const UniChar base58chars[] = {
     
     NSMutableData *data = [NSMutableData secureDataWithData:d];
 
-    [data appendBytes:d.SHA256_2.u32 length:4];
+    [data appendBytes:d.GROESTL_2.u32 length:4];
     return [self base58WithData:data];
 }
 

@@ -349,11 +349,11 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="zEA-kZ-fl3">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="Nbk-cZ-ENN">
-                                    <rect key="frame" x="0.0" y="0.5" width="94" height="15"/>
+                                    <rect key="frame" x="0.0" y="1" width="94" height="15"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -448,7 +448,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="bottomLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wallpaper-default" translatesAutoresizingMaskIntoConstraints="NO" id="8tO-ay-0Bj">
-                                <rect key="frame" x="0.0" y="99" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="229" width="640" height="438"/>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLt-8v-uP1" userLabel="Error Bar">
                                 <rect key="frame" x="0.0" y="25" width="375" height="26"/>
@@ -574,11 +574,11 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="Rxa-kr-LOc">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="KqJ-6D-LUi">
-                                    <rect key="frame" x="0.0" y="0.5" width="94" height="15"/>
+                                    <rect key="frame" x="0.0" y="1" width="94" height="15"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -718,7 +718,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wallpaper-default" translatesAutoresizingMaskIntoConstraints="NO" id="ihm-bL-FFP">
-                                <rect key="frame" x="28" y="99" width="320" height="568"/>
+                                <rect key="frame" x="-132" y="229" width="640" height="438"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.67000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="($0.00)" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZH0-Ng-7xb">
                                 <rect key="frame" x="212" y="89" width="52" height="20"/>
@@ -1082,7 +1082,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="kcu-Y5-KKx">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="9BJ-r6-3Av">
@@ -1125,7 +1125,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="bottom" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wallpaper-default" translatesAutoresizingMaskIntoConstraints="NO" id="tQ2-Uz-bsZ">
-                                <rect key="frame" x="-94" y="99" width="320" height="568"/>
+                                <rect key="frame" x="-94" y="229" width="640" height="438"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ƀ 0.00 ($0.00)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRT-Sr-x6R">
                                 <rect key="frame" x="137" y="172" width="101" height="45"/>
@@ -1192,7 +1192,7 @@
                             </connections>
                         </barButtonItem>
                         <view key="titleView" contentMode="scaleToFill" id="YZJ-Ar-CCc">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="Upd-gS-ln6">
@@ -1621,7 +1621,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="bottom" image="wallpaper-default" translatesAutoresizingMaskIntoConstraints="NO" id="N12-14-Jsp">
-                                <rect key="frame" x="-94" y="99" width="320" height="568"/>
+                                <rect key="frame" x="-94" y="229" width="640" height="438"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Enter this wallet's recovery phrase to wipe it and start/recover another. Your current balance remains on this phrase." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="289" translatesAutoresizingMaskIntoConstraints="NO" id="YC6-rN-4P5">
                                 <rect key="frame" x="43" y="64" width="289" height="62"/>
@@ -2309,7 +2309,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ePg-dk-slQ">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePg-dk-slQ">
                                 <rect key="frame" x="0.0" y="236" width="375" height="195"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wyo-tk-JbR">
@@ -2320,10 +2320,10 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" clipsSubviews="YES" tag="411" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="uvz-hk-Nr4">
-                                        <rect key="frame" x="61" y="20" width="253" height="41"/>
+                                        <rect key="frame" x="87" y="20" width="201" height="41"/>
                                         <gestureRecognizers/>
-                                        <string key="text">breadwallet %ver%%net%
-copyright © 2016 breadwallet LLC</string>
+                                        <string key="text">groestlwallet %ver%%net%
+gro</string>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -2332,20 +2332,20 @@ copyright © 2016 breadwallet LLC</string>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="support@breadwallet.com" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="5OA-tB-Exg">
-                                        <rect key="frame" x="92" y="101" width="192" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="groestlcoin@gmail.com" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="5OA-tB-Exg">
+                                        <rect key="frame" x="103" y="101" width="170" height="21"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="D4H-hd-LsX">
-                                        <rect key="frame" x="85" y="139" width="205" height="36"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="D4H-hd-LsX">
+                                        <rect key="frame" x="93" y="139" width="214" height="36"/>
                                         <string key="text">exchange rate data provided by
-bitpay.com/rates</string>
+bitpay.com/rates and by poloniex</string>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="15"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G4X-xw-xAl">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G4X-xw-xAl">
                                         <rect key="frame" x="0.0" y="194" width="375" height="1"/>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -2359,14 +2359,14 @@ bitpay.com/rates</string>
                                     <constraint firstAttribute="trailing" secondItem="G4X-xw-xAl" secondAttribute="trailing" id="4eh-tn-kSf"/>
                                     <constraint firstItem="Wyo-tk-JbR" firstAttribute="top" secondItem="ePg-dk-slQ" secondAttribute="top" id="8Rt-J8-gsZ"/>
                                     <constraint firstAttribute="centerX" secondItem="uvz-hk-Nr4" secondAttribute="centerX" id="DEL-Uu-EPu"/>
-                                    <constraint firstAttribute="centerX" secondItem="D4H-hd-LsX" secondAttribute="centerX" id="DRv-HD-k7o"/>
+                                    <constraint firstAttribute="centerX" secondItem="D4H-hd-LsX" secondAttribute="centerX" constant="-12" id="DRv-HD-k7o"/>
                                     <constraint firstAttribute="bottom" secondItem="D4H-hd-LsX" secondAttribute="bottom" constant="20" id="EDS-xg-Geu"/>
                                     <constraint firstAttribute="trailing" secondItem="Wyo-tk-JbR" secondAttribute="trailing" id="Meb-9n-MCt"/>
                                     <constraint firstItem="lYb-eg-NfF" firstAttribute="top" secondItem="uvz-hk-Nr4" secondAttribute="bottom" constant="18" id="VvA-41-AWn"/>
                                     <constraint firstAttribute="centerX" secondItem="5OA-tB-Exg" secondAttribute="centerX" id="WD5-hb-vC4"/>
                                     <constraint firstItem="Wyo-tk-JbR" firstAttribute="leading" secondItem="ePg-dk-slQ" secondAttribute="leading" id="XyP-sw-WKb"/>
                                     <constraint firstItem="uvz-hk-Nr4" firstAttribute="top" secondItem="ePg-dk-slQ" secondAttribute="top" constant="20" id="g7s-20-qcl"/>
-                                    <constraint firstItem="D4H-hd-LsX" firstAttribute="top" secondItem="5OA-tB-Exg" secondAttribute="bottom" constant="18" id="h7P-NE-60e"/>
+                                    <constraint firstItem="D4H-hd-LsX" firstAttribute="top" secondItem="5OA-tB-Exg" secondAttribute="bottom" constant="17" id="h7P-NE-60e"/>
                                     <constraint firstAttribute="bottom" secondItem="G4X-xw-xAl" secondAttribute="bottom" id="jM5-Ee-UoQ"/>
                                     <constraint firstItem="G4X-xw-xAl" firstAttribute="leading" secondItem="ePg-dk-slQ" secondAttribute="leading" id="lQV-GX-C2M"/>
                                     <constraint firstItem="5OA-tB-Exg" firstAttribute="top" secondItem="lYb-eg-NfF" secondAttribute="bottom" constant="1" id="tyf-6S-EzU"/>
@@ -2382,7 +2382,7 @@ bitpay.com/rates</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" tag="413" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Irz-6P-zvD">
-                                <rect key="frame" x="292" y="617" width="67" height="30"/>
+                                <rect key="frame" x="296" y="617" width="67" height="30"/>
                                 <state key="normal" title="copy logs">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -2397,13 +2397,13 @@ bitpay.com/rates</string>
                             <constraint firstItem="ePg-dk-slQ" firstAttribute="leading" secondItem="Dle-8P-UY1" secondAttribute="leading" id="bVE-7g-IcS"/>
                             <constraint firstItem="xDQ-J5-6Ey" firstAttribute="top" secondItem="Irz-6P-zvD" secondAttribute="bottom" constant="20" id="d4a-ya-bBL"/>
                             <constraint firstItem="lYb-eg-NfF" firstAttribute="centerX" secondItem="Dle-8P-UY1" secondAttribute="centerX" id="gOR-hm-zt5"/>
-                            <constraint firstItem="Irz-6P-zvD" firstAttribute="trailing" secondItem="Dle-8P-UY1" secondAttribute="trailingMargin" id="hoX-wA-yQC"/>
+                            <constraint firstItem="Irz-6P-zvD" firstAttribute="trailing" secondItem="Dle-8P-UY1" secondAttribute="trailingMargin" constant="4" id="hoX-wA-yQC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ulo-B9-Nv5">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="zYA-4z-JxL">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="dIg-nc-obY">
@@ -2486,7 +2486,7 @@ bitpay.com/rates</string>
 %no-eye%
 
 DO NOT let anyone see your recovery
-phrase or they can spend your bitcoins.
+phrase or they can spend your groestlcoins.
 
 
 
@@ -2629,7 +2629,7 @@ Other devices may be infected.
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="bottom" image="wallpaper-default" translatesAutoresizingMaskIntoConstraints="NO" id="dqh-Fj-S7p">
-                                <rect key="frame" x="-94" y="99" width="320" height="568"/>
+                                <rect key="frame" x="-94" y="229" width="640" height="438"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="if you ever lose your phone, you will need this phrase to recover your wallet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="300" translatesAutoresizingMaskIntoConstraints="NO" id="EQG-Km-ZKY">
                                 <rect key="frame" x="44" y="235" width="287" height="40"/>
@@ -2748,7 +2748,7 @@ Other devices may be infected.
                     <navigationItem key="navigationItem" id="pSA-60-Zeg">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="9QQ-Dq-BDV">
-                            <rect key="frame" x="140.5" y="14.5" width="94" height="15"/>
+                            <rect key="frame" x="141" y="15" width="94" height="15"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" image="breadwallet" translatesAutoresizingMaskIntoConstraints="NO" id="liH-WQ-uDo">
@@ -2796,7 +2796,7 @@ Other devices may be infected.
         <image name="flash" width="33" height="33"/>
         <image name="lock" width="12" height="16"/>
         <image name="refresh" width="9" height="11"/>
-        <image name="wallpaper-default" width="320" height="568"/>
+        <image name="wallpaper-default" width="640" height="438"/>
         <image name="wallpaper-welcome" width="757" height="568"/>
         <image name="x" width="20" height="16"/>
     </resources>
