@@ -202,8 +202,9 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 
 @property (nonatomic, strong) BRWallet *wallet;
 @property (nonatomic, strong) Reachability *reachability;
-@property (nonatomic, strong) NSArray *currencyPrices;
+@property (nonatomic, strong) NSArray *currencyBitcoinPrices;
 @property (nonatomic, strong) NSNumber *localBitcoinPrice;
+@property (nonatomic, strong) NSNumber *localGroestlcoinPrice;
 @property (nonatomic, assign) BOOL sweepFee, didPresent;
 @property (nonatomic, strong) NSString *sweepKey;
 @property (nonatomic, strong) void (^sweepCompletion)(BRTransaction *tx, uint64_t fee, NSError *error);
@@ -275,7 +276,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     self.protectedObserver = nil;
     _currencyCodes = [defs arrayForKey:CURRENCY_CODES_KEY];
     _currencyNames = [defs arrayForKey:CURRENCY_NAMES_KEY];
-    _currencyPrices = [defs arrayForKey:CURRENCY_PRICES_KEY];
+    _currencyBitcoinPrices = [defs arrayForKey:CURRENCY_PRICES_KEY];
     self.localCurrencyCode = ([defs stringForKey:LOCAL_CURRENCY_CODE_KEY]) ?
         [defs stringForKey:LOCAL_CURRENCY_CODE_KEY] : [[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode];
     dispatch_async(dispatch_get_main_queue(), ^{ [self updateBitcoinExchangeRate]; });
@@ -871,14 +872,18 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     if (i == NSNotFound) code = DEFAULT_CURRENCY_CODE, i = [_currencyCodes indexOfObject:DEFAULT_CURRENCY_CODE];
     _localCurrencyCode = [code copy];
 
-    if (i < _currencyPrices.count && self.secureTime + 3*24*60*60 > [NSDate timeIntervalSinceReferenceDate]) {
-        self.localBitcoinPrice = _currencyPrices[i]; // don't use exchange rate data more than 72hrs out of date
+    if (i < _currencyBitcoinPrices.count && self.secureTime + 3*24*60*60 > [NSDate timeIntervalSinceReferenceDate]) {
+        self.localBitcoinPrice = _currencyBitcoinPrices[i]; // don't use exchange rate data more than 72hrs out of date
+        self.localGroestlcoinPrice = [NSNumber numberWithDouble:self.localCurrencyPrice];
     }
-    else self.localBitcoinPrice = @(0);
+    else {
+       self.localBitcoinPrice = @(0);
+        self.localGroestlcoinPrice = @(0);
+    }
 
     self.localFormat.currencyCode = _localCurrencyCode;
     self.localFormat.maximum =
-        [[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
+        [[NSDecimalNumber decimalNumberWithDecimal:self.localGroestlcoinPrice.decimalValue]
          decimalNumberByMultiplyingBy:(id)[NSDecimalNumber numberWithLongLong:MAX_MONEY/SATOSHIS]];
 
     if ([self.localCurrencyCode isEqual:[[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode]]) {
@@ -970,11 +975,11 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
         
         _currencyCodes = codes;
         _currencyNames = names;
-        _currencyPrices = rates;
+        _currencyBitcoinPrices = rates;
         self.localCurrencyCode = _localCurrencyCode; // update localCurrencyPrice and localFormat.maximum
         [defs setObject:self.currencyCodes forKey:CURRENCY_CODES_KEY];
         [defs setObject:self.currencyNames forKey:CURRENCY_NAMES_KEY];
-        [defs setObject:self.currencyPrices forKey:CURRENCY_PRICES_KEY];
+        [defs setObject:self.currencyBitcoinPrices forKey:CURRENCY_PRICES_KEY];
         [defs synchronize];
         NSLog(@"exchange rate updated to %@/%@", [self localCurrencyStringForAmount:SATOSHIS],
               [self stringForAmount:SATOSHIS]);
@@ -1258,9 +1263,9 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
 - (NSString *)localCurrencyStringForAmount:(int64_t)amount
 {
     if (amount == 0) return [self.localFormat stringFromNumber:@(0)];
-    if (self.localBitcoinPrice.doubleValue <= DBL_EPSILON) return @""; // no exchange rate data
+    if (self.localGroestlcoinPrice.doubleValue <= DBL_EPSILON) return @""; // no exchange rate data
 
-    NSDecimalNumber *n = [[[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
+    NSDecimalNumber *n = [[[NSDecimalNumber decimalNumberWithDecimal:self.localGroestlcoinPrice.decimalValue]
                            decimalNumberByMultiplyingBy:(id)[NSDecimalNumber numberWithLongLong:llabs(amount)]]
                           decimalNumberByDividingBy:(id)[NSDecimalNumber numberWithLongLong:SATOSHIS]],
                      *min = [[NSDecimalNumber one]

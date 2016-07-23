@@ -1724,19 +1724,19 @@ static const char *dns_seeds[] = {
     block.height = prev.height + 1;
     txTime = block.timestamp/2 + prev.timestamp/2;
     
-//    if ((block.height % 1000) == 0) { //free up some memory from time to time
-//        
-//        BRMerkleBlock *b = block;
-//        
-//        for (uint32_t i = 0; b && i < (DGW_PAST_BLOCKS_MAX + 50); i++) {
-//            b = self.blocks[uint256_obj(b.prevBlock)];
-//        }
-//        
-//        while (b) { // free up some memory
-//            b = self.blocks[uint256_obj(b.prevBlock)];
-//            if (b) [self.blocks removeObjectForKey:uint256_obj(b.prevBlock)];
-//        }
-//    }
+    if ((block.height % 1000) == 0) { //free up some memory from time to time
+        
+        BRMerkleBlock *b = block;
+        
+        for (uint32_t i = 0; b && i < (DGW_PAST_BLOCKS_MAX + 50); i++) {
+            b = self.blocks[uint256_obj(b.prevBlock)];
+        }
+        
+        while (b) { // free up some memory
+            b = self.blocks[uint256_obj(b.prevBlock)];
+            if (b) [self.blocks removeObjectForKey:uint256_obj(b.prevBlock)];
+        }
+    }
     
     // verify block difficulty if block is past last checkpoint
     if ((block.height > (checkpoint_array[CHECKPOINT_COUNT - 1].height + DGW_PAST_BLOCKS_MAX)) &&

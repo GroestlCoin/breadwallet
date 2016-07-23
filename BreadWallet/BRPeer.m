@@ -314,8 +314,8 @@ services:(uint64_t)services
 
 - (void)sendFilterloadMessage:(NSData *)filter
 {
-    self.sentFilter = YES;
-    [self sendMessage:filter type:MSG_FILTERLOAD];
+//    self.sentFilter = YES;
+//    [self sendMessage:filter type:MSG_FILTERLOAD];
 }
 
 - (void)sendMempoolMessage
