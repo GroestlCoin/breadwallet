@@ -248,7 +248,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
                                   stringByReplacingCharactersInRange:[self.format.positiveFormat rangeOfString:@"#"]
                                   withString:@"-#"];
     self.format.currencyCode = GRS;
-    self.format.currencySymbol = GRITS NARROW_NBSP;
+    self.format.currencySymbol = GRS NARROW_NBSP;
     self.format.maximumFractionDigits = 2;
     self.format.minimumFractionDigits = 0; // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
     self.format.maximum = @(MAX_MONEY/(int64_t)pow(10.0, self.format.maximumFractionDigits));
