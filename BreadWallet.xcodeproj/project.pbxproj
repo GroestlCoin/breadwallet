@@ -115,7 +115,6 @@
 		BA913BE41BD57E4D005A7C0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA913BE31BD57E4D005A7C0E /* Assets.xcassets */; };
 		BA913BEB1BD57E4D005A7C0E /* WatchApp Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BA913BEA1BD57E4D005A7C0E /* WatchApp Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BA913BF21BD57E4D005A7C0E /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA913BF11BD57E4D005A7C0E /* ExtensionDelegate.swift */; };
-		BA913BFA1BD57E4D005A7C0E /* WatchApp.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = BA913BDE1BD57E4D005A7C0E /* WatchApp.app */; };
 		BAA0E8CA1BD9273700DF4236 /* BRAWGlanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA0E8C91BD9273700DF4236 /* BRAWGlanceInterfaceController.swift */; };
 		BAA4843C1B3EFFAF0075C749 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = BAA4843B1B3EFFAF0075C749 /* UIImage+Utils.m */; };
 		BAA4843D1B3EFFAF0075C749 /* UIImage+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = BAA4843B1B3EFFAF0075C749 /* UIImage+Utils.m */; };
@@ -123,7 +122,6 @@
 		BAA6E3EF1BD5CA0E00773205 /* BRAWBalanceInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA6E3EE1BD5CA0E00773205 /* BRAWBalanceInterfaceController.swift */; };
 		BAA6E3F11BD5CA5900773205 /* BRAWReceiveMoneyInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA6E3F01BD5CA5900773205 /* BRAWReceiveMoneyInterfaceController.swift */; };
 		BAC7B6BE1BD9C29900165B84 /* BRPhoneWCSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BAC7B6BD1BD9C29900165B84 /* BRPhoneWCSessionManager.m */; };
-		BAE12BF21B2DEE7F00895CC5 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = BAE12BE51B2DEE7F00895CC5 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		BAE12C061B2DEEF700895CC5 /* BRTodayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BAE12C051B2DEEF700895CC5 /* BRTodayViewController.m */; };
 		FB65580F1D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
 		FB6558101D3F1A6B003946E3 /* NSData+Groestl.m in Sources */ = {isa = PBXBuildFile; fileRef = FB65580E1D3F1A6B003946E3 /* NSData+Groestl.m */; };
@@ -161,20 +159,6 @@
 			remoteGlobalIDString = BA913BE91BD57E4D005A7C0E;
 			remoteInfo = "WatchApp Extension";
 		};
-		BA913BF81BD57E4D005A7C0E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75D5F3B6191EC270004AB296 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BA913BDD1BD57E4D005A7C0E;
-			remoteInfo = WatchApp;
-		};
-		BAE12BF01B2DEE7F00895CC5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75D5F3B6191EC270004AB296 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BAE12BE41B2DEE7F00895CC5;
-			remoteInfo = TodayExtension;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -195,20 +179,8 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				BA913BFA1BD57E4D005A7C0E /* WatchApp.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BAE12BF71B2DEE7F00895CC5 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				BAE12BF21B2DEE7F00895CC5 /* TodayExtension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1036,15 +1008,12 @@
 				75D5F3BA191EC270004AB296 /* Sources */,
 				75D5F3BB191EC270004AB296 /* Frameworks */,
 				75D5F3BC191EC270004AB296 /* Resources */,
-				BAE12BF71B2DEE7F00895CC5 /* Embed App Extensions */,
 				BA913C021BD57E4E005A7C0E /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				757FC2531ADA30D100A1FDF7 /* PBXTargetDependency */,
-				BAE12BF11B2DEE7F00895CC5 /* PBXTargetDependency */,
-				BA913BF91BD57E4D005A7C0E /* PBXTargetDependency */,
 			);
 			name = breadwallet;
 			productName = BreadWallet;
@@ -1140,7 +1109,7 @@
 						CreatedOnToolsVersion = 6.1;
 					};
 					75D5F3BD191EC270004AB296 = {
-						DevelopmentTeam = 4R7S6N88W9;
+						DevelopmentTeam = 4CCXJT7SPT;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1166,7 +1135,7 @@
 					};
 					BAE12BE41B2DEE7F00895CC5 = {
 						CreatedOnToolsVersion = 6.3.2;
-						DevelopmentTeam = 4R7S6N88W9;
+						DevelopmentTeam = 4CCXJT7SPT;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -1434,16 +1403,6 @@
 			target = BA913BE91BD57E4D005A7C0E /* WatchApp Extension */;
 			targetProxy = BA913BEC1BD57E4D005A7C0E /* PBXContainerItemProxy */;
 		};
-		BA913BF91BD57E4D005A7C0E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BA913BDD1BD57E4D005A7C0E /* WatchApp */;
-			targetProxy = BA913BF81BD57E4D005A7C0E /* PBXContainerItemProxy */;
-		};
-		BAE12BF11B2DEE7F00895CC5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BAE12BE41B2DEE7F00895CC5 /* TodayExtension */;
-			targetProxy = BAE12BF01B2DEE7F00895CC5 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1705,6 +1664,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -1715,8 +1676,9 @@
 				);
 				INFOPLIST_FILE = BreadWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet;
+				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin22.groestlwalletTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWallet/breadwallet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -1731,6 +1693,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BreadWallet/BreadWallet-Prefix.pch";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -1741,8 +1705,9 @@
 				);
 				INFOPLIST_FILE = BreadWallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet;
+				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin22.groestlwalletTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWallet/breadwallet-Bridging-Header.h";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
@@ -1859,6 +1824,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1872,7 +1838,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet.TodayExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwalletTest.TodayExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -1886,6 +1852,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1896,7 +1863,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet.TodayExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwalletTest.TodayExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
