@@ -43,8 +43,8 @@
 #define CIRCLE  @"\xE2\x97\x8C" // dotted circle (utf-8)
 #define DOT     @"\xE2\x97\x8F" // black circle (utf-8)
 
-#define UNSPENT_URL          @"https://api.breadwallet.com/q/addrs/utxo"
-#define UNSPENT_FAILOVER_URL @"https://insight.bitpay.com/api/addrs/utxo"
+#define UNSPENT_CHAINZ_URL          @"http://chainz.cryptoid.info/grs/api.dws?key=d47da926b82e&q=unspent"
+#define UNSPENT_INSIGHT_URL @"http://groestlsight.groestlcoin.org/api/addrs/utxo"
 #define BITCOIN_TICKER_URL           @"https://api.breadwallet.com/rates"
 #define BITCOIN_TICKER_FAILOVER_URL  @"https://bitpay.com/rates"
 #define POLONIEX_TICKER_URL  @"https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_GRS&depth=1"
@@ -1054,10 +1054,10 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 - (void)utxosForAddresses:(NSArray *)addresses
 completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError *error))completion
 {
-    [self utxos:UNSPENT_URL forAddresses:addresses
+    [self utxos:UNSPENT_CHAINZ_URL forAddresses:addresses
     completion:^(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError *error) {
         if (error) {
-            [self utxos:UNSPENT_FAILOVER_URL forAddresses:addresses
+            [self utxos:UNSPENT_INSIGHT_URL forAddresses:addresses
             completion:^(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError *err) {
                 if (err) err = error;
                 completion(utxos, amounts, scripts, err);
@@ -1070,14 +1070,21 @@ completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError
 - (void)utxos:(NSString *)unspentURL forAddresses:(NSArray *)addresses
 completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError *error))completion
 {
-    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:UNSPENT_URL]
-                                cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0];
-    NSMutableArray *args = [NSMutableArray array];
     NSMutableCharacterSet *charset = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
     
     [charset removeCharactersInString:@"&="];
-    [args addObject:[@"addrs=" stringByAppendingString:[[addresses componentsJoinedByString:@","]
+    if ([unspentURL isEqualToString:UNSPENT_CHAINZ_URL]) {
+        unspentURL = [[unspentURL stringByAppendingString:@"&active="] stringByAppendingString:[[addresses componentsJoinedByString:@"|"] stringByAddingPercentEncodingWithAllowedCharacters:charset]];
+    }
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:unspentURL]
+                                cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:20.0];
+    NSMutableArray *args = [NSMutableArray array];
+
+    
+    if ([unspentURL isEqualToString:UNSPENT_INSIGHT_URL]) {
+        [args addObject:[@"addrs=" stringByAppendingString:[[addresses componentsJoinedByString:@","]
                                                         stringByAddingPercentEncodingWithAllowedCharacters:charset]]];
+    }
     [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
     req.HTTPMethod = @"POST";
     req.HTTPBody = [[args componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
@@ -1100,6 +1107,10 @@ completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError
             completion(nil, nil, nil, error);
             return;
         }
+        
+        if ([unspentURL hasPrefix:UNSPENT_CHAINZ_URL]) {
+            json = json[@"unspent_outputs"];
+        }
 
         if (! [json isKindOfClass:[NSArray class]]) {
             completion(nil, nil, nil,
@@ -1108,15 +1119,17 @@ completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError
                          req.URL.host]}]);
             return;
         }
+        
+        if ([unspentURL hasPrefix:UNSPENT_CHAINZ_URL]) {
 
         for (NSDictionary *utxo in json) {
             if (! [utxo isKindOfClass:[NSDictionary class]] ||
-                ! [utxo[@"txid"] isKindOfClass:[NSString class]] ||
-                [utxo[@"txid"] hexToData].length != sizeof(UInt256) ||
-                ! [utxo[@"vout"] isKindOfClass:[NSNumber class]] ||
-                ! [utxo[@"scriptPubKey"] isKindOfClass:[NSString class]] ||
-                ! [utxo[@"scriptPubKey"] hexToData] ||
-                ! [utxo[@"satoshis"] isKindOfClass:[NSNumber class]]) {
+                ! [utxo[@"tx_hash"] isKindOfClass:[NSString class]] ||
+                [utxo[@"tx_hash"] hexToData].length != sizeof(UInt256) ||
+                ! [utxo[@"tx_output_n"] isKindOfClass:[NSNumber class]] ||
+                ! [utxo[@"script"] isKindOfClass:[NSString class]] ||
+                ! [utxo[@"script"] hexToData] ||
+                ! [utxo[@"value"] isKindOfClass:[NSNumber class]]) {
                 completion(nil, nil, nil,
                            [NSError errorWithDomain:@"GroestlWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
                             [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil),
@@ -1124,12 +1137,35 @@ completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError
                 return;
             }
 
-            o.hash = *(const UInt256 *)[utxo[@"txid"] hexToData].reverse.bytes;
-            o.n = [utxo[@"vout"] unsignedIntValue];
+            o.hash = *(const UInt256 *)[utxo[@"tx_hash"] hexToData].reverse.bytes;
+            o.n = [utxo[@"tx_output_n"] unsignedIntValue];
             [utxos addObject:brutxo_obj(o)];
-            [amounts addObject:utxo[@"satoshis"]];
-            [scripts addObject:[utxo[@"scriptPubKey"] hexToData]];
+            [amounts addObject:utxo[@"value"]];
+            [scripts addObject:[utxo[@"script"] hexToData]];
         }
+        } else {
+                for (NSDictionary *utxo in json) {
+                    if (! [utxo isKindOfClass:[NSDictionary class]] ||
+                        ! [utxo[@"txid"] isKindOfClass:[NSString class]] ||
+                        [utxo[@"txid"] hexToData].length != sizeof(UInt256) ||
+                        ! [utxo[@"vout"] isKindOfClass:[NSNumber class]] ||
+                        ! [utxo[@"scriptPubKey"] isKindOfClass:[NSString class]] ||
+                        ! [utxo[@"scriptPubKey"] hexToData] ||
+                        ! [utxo[@"satoshis"] isKindOfClass:[NSNumber class]]) {
+                        completion(nil, nil, nil,
+                                   [NSError errorWithDomain:@"GroestlWallet" code:417 userInfo:@{NSLocalizedDescriptionKey:
+                                                                                                     [NSString stringWithFormat:NSLocalizedString(@"unexpected response from %@", nil),
+                                                                                                      req.URL.host]}]);
+                        return;
+                    }
+                    
+                    o.hash = *(const UInt256 *)[utxo[@"txid"] hexToData].reverse.bytes;
+                    o.n = [utxo[@"vout"] unsignedIntValue];
+                    [utxos addObject:brutxo_obj(o)];
+                    [amounts addObject:utxo[@"satoshis"]];
+                    [scripts addObject:[utxo[@"scriptPubKey"] hexToData]];
+                }
+            }
 
         completion(utxos, amounts, scripts, nil);
     }] resume];
