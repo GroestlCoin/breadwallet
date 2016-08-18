@@ -249,7 +249,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
                                   withString:@"-#"];
     self.format.currencyCode = GRS;
     self.format.currencySymbol = GRS NARROW_NBSP;
-    self.format.maximumFractionDigits = 2;
+    self.format.maximumFractionDigits = 8;
     self.format.minimumFractionDigits = 0; // iOS 8 bug, minimumFractionDigits now has to be set after currencySymbol
     self.format.maximum = @(MAX_MONEY/(int64_t)pow(10.0, self.format.maximumFractionDigits));
     _localFormat = [NSNumberFormatter new];
@@ -1277,13 +1277,13 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
     if ([string hasPrefix:@"<"]) string = [string substringFromIndex:1];
 
     NSNumber *n = [self.localFormat numberFromString:string];
-    int64_t price = [[NSDecimalNumber decimalNumberWithDecimal:self.localBitcoinPrice.decimalValue]
+    NSDecimalNumber * localDecimalGroestlcoinPrice = [NSDecimalNumber decimalNumberWithDecimal:self.localGroestlcoinPrice.decimalValue];
+    float price = [localDecimalGroestlcoinPrice decimalNumberByMultiplyingByPowerOf10:self.localFormat.maximumFractionDigits].floatValue;
+    int64_t local = [[NSDecimalNumber decimalNumberWithDecimal:n.decimalValue]
                       decimalNumberByMultiplyingByPowerOf10:self.localFormat.maximumFractionDigits].longLongValue,
-            local = [[NSDecimalNumber decimalNumberWithDecimal:n.decimalValue]
-                      decimalNumberByMultiplyingByPowerOf10:self.localFormat.maximumFractionDigits].longLongValue,
-            overflowbits = 0, p = 10, min, max, amount;
+            overflowbits = 0, min, max, amount;
 
-    if (local == 0 || price < 1) return 0;
+    if (local == 0) return 0;
     while (llabs(local) + 1 > INT64_MAX/SATOSHIS) local /= 2, overflowbits++; // make sure we won't overflow an int64_t
     min = llabs(local)*SATOSHIS/price + 1; // minimum amount that safely matches local currency string
     max = (llabs(local) + 1)*SATOSHIS/price - 1; // maximum amount that safely matches local currency string
@@ -1291,9 +1291,14 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
     while (overflowbits > 0) local *= 2, min *= 2, max *= 2, amount *= 2, overflowbits--;
 
     if (amount >= MAX_MONEY) return (local < 0) ? -MAX_MONEY : MAX_MONEY;
-    while ((amount/p)*p >= min && p <= INT64_MAX/10) p *= 10; // lowest decimal precision matching local currency string
-    p /= 10;
-    return (local < 0) ? -(amount/p)*p : (amount/p)*p;
+    int16_t digits = (int16_t)log10(amount);
+    if (digits > 6) {
+        int64_t divideBy = powf(10, (digits - 6));
+        return (local < 0) ? -(amount/divideBy)*divideBy : (amount/divideBy)*divideBy;
+    } else {
+        return (local < 0) ? -amount : amount;
+    }
+    
 }
 
 - (NSString *)localCurrencyStringForAmount:(int64_t)amount

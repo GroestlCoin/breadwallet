@@ -788,13 +788,13 @@ UInt256 divide (UInt256 a,UInt256 b)
 //                          @"[BRPaymentRequest requestWithString:]");
 //    
 //    r = [BRPaymentRequest requestWithString:@"bitcoin:1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW?amount=21000000"];
-//    XCTAssertEqual(2100000000000000, r.amount, @"[BRPaymentRequest requestWithString:]");
+//    XCTAssertEqual(10500000000000000, r.amount, @"[BRPaymentRequest requestWithString:]");
 //    XCTAssertEqualObjects(@"bitcoin:1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW?amount=21000000", r.string,
 //                          @"[BRPaymentRequest requestWithString:]");
 //
 //    // test for floating point rounding issues, these values cannot be exactly represented with an IEEE 754 double
 //    r = [BRPaymentRequest requestWithString:@"bitcoin:1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW?amount=20999999.99999999"];
-//    XCTAssertEqual(2099999999999999, r.amount, @"[BRPaymentRequest requestWithString:]");
+//    XCTAssertEqual(10499999999999999, r.amount, @"[BRPaymentRequest requestWithString:]");
 //    XCTAssertEqualObjects(@"bitcoin:1BTCorgHwCg6u2YSAWKgS17qUad6kHmtQW?amount=20999999.99999999", r.string,
 //                          @"[BRPaymentRequest requestWithString:]");
 //
@@ -1436,16 +1436,16 @@ UInt256 divide (UInt256 a,UInt256 b)
 //    XCTAssertEqual([manager amountForString:s], 1, @"[BRWalletManager amountForString:]");
 //    
 //    s = [manager stringForAmount:2100000000000000];
-//    XCTAssertEqual([manager amountForString:s], 2100000000000000, @"[BRWalletManager amountForString:]");
+//    XCTAssertEqual([manager amountForString:s], 10500000000000000, @"[BRWalletManager amountForString:]");
 //    
-//    s = [manager stringForAmount:2099999999999999];
-//    XCTAssertEqual([manager amountForString:s], 2099999999999999, @"[BRWalletManager amountForString:]");
+//    s = [manager stringForAmount:10499999999999999];
+//    XCTAssertEqual([manager amountForString:s], 10499999999999999, @"[BRWalletManager amountForString:]");
 //    
-//    s = [manager stringForAmount:2099999999999995];
-//    XCTAssertEqual([manager amountForString:s], 2099999999999995, @"[BRWalletManager amountForString:]");
+//    s = [manager stringForAmount:10499999999999995];
+//    XCTAssertEqual([manager amountForString:s], 10499999999999995, @"[BRWalletManager amountForString:]");
 //    
-//    s = [manager stringForAmount:2099999999999990];
-//    XCTAssertEqual([manager amountForString:s], 2099999999999990, @"[BRWalletManager amountForString:]");
+//    s = [manager stringForAmount:10499999999999990];
+//    XCTAssertEqual([manager amountForString:s], 10499999999999990, @"[BRWalletManager amountForString:]");
 //}
 //
 //#pragma mark - testBloomFilter
