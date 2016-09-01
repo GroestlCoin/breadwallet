@@ -504,7 +504,8 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 - (NSData *)seedWithPrompt:(NSString *)authprompt forAmount:(uint64_t)amount
 {
     @autoreleasepool {
-        BOOL touchid = (self.wallet.totalSent + amount < getKeychainInt(SPEND_LIMIT_KEY, nil)) ? YES : NO;
+        int64_t spendLimitKey = getKeychainInt(SPEND_LIMIT_KEY, nil);
+        BOOL touchid = ((self.wallet.totalSent + amount) < spendLimitKey) ? YES : NO;
 
         if (! [self authenticateWithPrompt:authprompt andTouchId:touchid]) return nil;
         // BUG: if user manually chooses to enter pin, the touch id spending limit is reset, but the tx being authorized

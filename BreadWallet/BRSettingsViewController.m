@@ -231,15 +231,15 @@
         self.selectorType = 1;
         self.selectorOptions =
             @[NSLocalizedString(@"always require passcode", nil),
-              [NSString stringWithFormat:@"%@      (%@)", [manager stringForAmount:SATOSHIS/10],
-               [manager localCurrencyStringForAmount:SATOSHIS/10]],
-              [NSString stringWithFormat:@"%@   (%@)", [manager stringForAmount:SATOSHIS],
-               [manager localCurrencyStringForAmount:SATOSHIS]],
-              [NSString stringWithFormat:@"%@ (%@)", [manager stringForAmount:SATOSHIS*10],
-               [manager localCurrencyStringForAmount:SATOSHIS*10]]];
-        if (manager.spendingLimit > SATOSHIS*10) manager.spendingLimit = SATOSHIS*10;
-        self.selectedOption = self.selectorOptions[(log10(manager.spendingLimit) < 6) ? 0 :
-                                                   (NSUInteger)log10(manager.spendingLimit) - 6];
+              [NSString stringWithFormat:@"%@      (%@)", [manager stringForAmount:SATOSHIS*1000],
+               [manager localCurrencyStringForAmount:SATOSHIS*1000]],
+              [NSString stringWithFormat:@"%@   (%@)", [manager stringForAmount:SATOSHIS*10000],
+               [manager localCurrencyStringForAmount:SATOSHIS*10000]],
+              [NSString stringWithFormat:@"%@ (%@)", [manager stringForAmount:SATOSHIS*100000],
+               [manager localCurrencyStringForAmount:SATOSHIS*100000]]];
+        if (manager.spendingLimit > SATOSHIS*100000) manager.spendingLimit = SATOSHIS*100000;
+        self.selectedOption = self.selectorOptions[(log10(manager.spendingLimit) < 10) ? 0 :
+                                                   (NSUInteger)log10(manager.spendingLimit) - 10];
         self.noOptionsText = nil;
         self.selectorController.title = NSLocalizedString(@"touch id spending limit", nil);
         [self.navigationController pushViewController:self.selectorController animated:YES];
@@ -271,7 +271,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (tableView == self.selectorController.tableView) return 1;
-    return 4;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -466,15 +466,9 @@ _switch_cell:
     UIViewController *c = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
     UILabel *l = (id)[c.view viewWithTag:411];
     NSMutableAttributedString *s = [[NSMutableAttributedString alloc] initWithAttributedString:l.attributedText];
-    
-#if GROESTLCOIN_TESTNET
-    [s replaceCharactersInRange:[s.string rangeOfString:@"%net%"] withString:@"%net% (testnet)"];
-#endif
     [s replaceCharactersInRange:[s.string rangeOfString:@"%ver%"]
-     withString:[NSString stringWithFormat:@"%@ - %@",
-                 NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],
-                 NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"]]];
-    [s replaceCharactersInRange:[s.string rangeOfString:@"%net%"] withString:@""];
+     withString:[NSString stringWithFormat:@"%@",
+                 NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]]];
     l.attributedText = s;
     [l.superview.gestureRecognizers.firstObject addTarget:self action:@selector(about:)];
 #if DEBUG
@@ -573,7 +567,7 @@ _switch_cell:
                 manager.localCurrencyCode = manager.currencyCodes[indexPath.row];
             }
         }
-        else manager.spendingLimit = (indexPath.row > 0) ? pow(10, indexPath.row + 6) : 0;
+        else manager.spendingLimit = (indexPath.row > 0) ? pow(10, indexPath.row + 10) : 0;
         
         if (currencyCodeIndex < self.selectorOptions.count && currencyCodeIndex != indexPath.row) {
             [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:currencyCodeIndex inSection:0], indexPath]

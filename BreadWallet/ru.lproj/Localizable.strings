@@ -1,5 +1,5 @@
 /* No comment provided by engineer. */
-"%@ is for 'mgrs'. %@ = 1 groestlcoin." = "%1$@ означает «бит». %2$@ составляет 1 groestlcoin.";
+"%@ is for 'grs'. %@ = 1 groestlcoin." = "%1$@ означает «бит». %2$@ составляет 1 groestlcoin.";
 
 /* No comment provided by engineer. */
 "%@ is not allowed to access the camera" = "%@ необходим доступ к камере";

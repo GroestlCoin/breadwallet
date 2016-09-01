@@ -1,5 +1,5 @@
 /* No comment provided by engineer. */
-"%@ is for 'mgrs'. %@ = 1 groestlcoin." = "%1$@ είναι για τα mgrs. %2$@ = 1 groestlcoin.";
+"%@ is for 'grs'. %@ = 1 groestlcoin." = "%1$@ είναι για τα grs. %2$@ = 1 groestlcoin.";
 
 /* No comment provided by engineer. */
 "%@ is not allowed to access the camera" = "%@ δεν επιτρέπεται να έχετε πρόσβαση στην κάμερα";

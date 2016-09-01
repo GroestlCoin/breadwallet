@@ -1,5 +1,5 @@
 /* No comment provided by engineer. */
-"%@ is for 'mgrs'. %@ = 1 groestlcoin." = "A %1$@ 'bit'-et jelent.\n%2$@ = 1 groestlcoin.";
+"%@ is for 'grs'. %@ = 1 groestlcoin." = "A %1$@ 'bit'-et jelent.\n%2$@ = 1 groestlcoin.";
 
 /* No comment provided by engineer. */
 "%@ is not allowed to access the camera" = "%@ nem tud hozzáférni a kamerához";
