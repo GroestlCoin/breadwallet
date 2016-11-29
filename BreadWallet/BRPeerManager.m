@@ -37,6 +37,7 @@
 #import "NSData+Bitcoin.h"
 #import "NSManagedObject+Sugar.h"
 #import "BREventManager.h"
+#import "breadwallet-Swift.h"
 #import <netdb.h>
 
 #if ! PEER_LOGGING
@@ -515,7 +516,6 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
     { 901152, "000000000c558185e8bde3b2781730b32dafea784d4b86c73b46e79541445d87", 1451186413, 0x010c0000u },
     { 903168, "0000000014ad7434ee93115bc99d0ce95d50a72ab0934014ac59053e42be259e", 1451313482, 0x010b0000u },
     { 1070800, "000000000776c0aa6462bf8da2794f51e22fa99185bded45f73f08390decb810", 1461889675, 0x01c247361u }
-    
 };
 
 static const char *dns_seeds[] = {
@@ -754,8 +754,7 @@ static const char *dns_seeds[] = {
 - (BRMerkleBlock *)lastBlock
 {
     if (! _lastBlock) {
-        NSFetchRequest *req = [BRMerkleBlockEntity fetchRequest];
-        
+        NSFetchRequest *req = [BRMerkleBlockEntity fetchReq];
         req.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"height" ascending:NO]];
         req.predicate = [NSPredicate predicateWithFormat:@"height >= 0 && height != %d", BLOCK_UNKNOWN_HEIGHT];
         req.fetchLimit = 1;
@@ -796,7 +795,6 @@ static const char *dns_seeds[] = {
 - (NSUInteger)peerCount
 {
     NSUInteger count = 0;
-    
     for (BRPeer *peer in [self.connectedPeers copy]) {
         if (peer.status == BRPeerStatusConnected) count++;
     }
@@ -829,7 +827,8 @@ static const char *dns_seeds[] = {
     NSSet *addresses = [manager.wallet.allReceiveAddresses setByAddingObjectsFromSet:manager.wallet.allChangeAddresses];
     NSUInteger i, elemCount = addresses.count + manager.wallet.unspentOutputs.count;
     NSMutableArray *inputs = [NSMutableArray new];
-    
+
+
     for (BRTransaction *tx in manager.wallet.allTransactions) { // find TXOs spent within the last 100 blocks
         if (tx.blockHeight != TX_UNCONFIRMED && tx.blockHeight + 100 < self.lastBlockHeight) break;
         i = 0;
@@ -848,15 +847,15 @@ static const char *dns_seeds[] = {
     }
     
     BRBloomFilter *filter = [[BRBloomFilter alloc] initWithFalsePositiveRate:self.fpRate
-                                                             forElementCount:(elemCount < 200 ? 300 : elemCount + 100) tweak:(uint32_t)peer.hash
-                                                                       flags:BLOOM_UPDATE_ALL];
-    
+                             forElementCount:(elemCount < 200 ? 300 : elemCount + 100) tweak:(uint32_t)peer.hash
+                             flags:BLOOM_UPDATE_ALL];
+
     for (NSString *addr in addresses) {// add addresses to watch for tx receiveing money to the wallet
         NSData *hash = addr.addressToHash160;
-        
+
         if (hash && ! [filter containsData:hash]) [filter insertData:hash];
     }
-    
+
     for (NSValue *utxo in manager.wallet.unspentOutputs) { // add UTXOs to watch for tx sending money from the wallet
         [utxo getValue:&o];
         d = brutxo_data(o);
@@ -866,7 +865,7 @@ static const char *dns_seeds[] = {
     for (d in inputs) { // also add TXOs spent within the last 100 blocks
         if (! [filter containsData:d]) [filter insertData:d];
     }
-    
+
     // TODO: XXXX if already synced, recursively add inputs of unconfirmed receives
     _bloomFilter = filter;
     return _bloomFilter;
@@ -1086,12 +1085,24 @@ static const char *dns_seeds[] = {
 
 - (void)setBlockHeight:(int32_t)height andTimestamp:(NSTimeInterval)timestamp forTxHashes:(NSArray *)txHashes
 {
-    [[BRWalletManager sharedInstance].wallet setBlockHeight:height andTimestamp:timestamp forTxHashes:txHashes];
+    NSArray *updatedTx = [[BRWalletManager sharedInstance].wallet setBlockHeight:height andTimestamp:timestamp
+                          forTxHashes:txHashes];
     
     if (height != TX_UNCONFIRMED) { // remove confirmed tx from publish list and relay counts
         [self.publishedTx removeObjectsForKeys:txHashes];
         [self.publishedCallback removeObjectsForKeys:txHashes];
         [self.txRelays removeObjectsForKeys:txHashes];
+    }
+    
+    for (NSValue *hash in updatedTx) {
+        NSError *kvErr = nil;
+        BRTxMetadataObject *txm;
+        UInt256 h;
+        
+        [hash getValue:&h];
+        txm = [[BRTxMetadataObject alloc] initWithTxHash:h store:[BRAPIClient sharedClient].kv];
+        txm.blockHeight = height;
+        if (txm) [[BRAPIClient sharedClient].kv set:txm error:&kvErr];
     }
 }
 
@@ -1375,7 +1386,7 @@ static const char *dns_seeds[] = {
     }];
 }
 
-#pragma mark - BRPeerDelegate
+// MARK: - BRPeerDelegate
 
 - (void)peerConnected:(BRPeer *)peer
 {
@@ -1398,11 +1409,13 @@ static const char *dns_seeds[] = {
         [peer disconnect];
         return;
     }
-    
+
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerTxStatusNotification object:nil];
     });
-    
+
+
     for (BRTransaction *tx in manager.wallet.allTransactions) {
         if (tx.blockHeight != TX_UNCONFIRMED) break;
         
@@ -1563,9 +1576,16 @@ static const char *dns_seeds[] = {
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *kvErr = nil;
+            
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(txTimeout:) object:hash];
             [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerTxStatusNotification object:nil];
             if (callback) callback(nil);
+            
+            [[BRAPIClient sharedClient].kv
+             set:[[BRTxMetadataObject alloc] initWithTransaction:transaction exchangeRate:manager.localCurrencyPrice
+                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
+                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
         });
     }
     
@@ -1576,8 +1596,9 @@ static const char *dns_seeds[] = {
     // the transaction likely consumed one or more wallet addresses, so check that at least the next <gap limit>
     // unused addresses are still matched by the bloom filter
     NSArray *external = [manager.wallet addressesWithGapLimit:SEQUENCE_GAP_LIMIT_EXTERNAL internal:NO],
-    *internal = [manager.wallet addressesWithGapLimit:SEQUENCE_GAP_LIMIT_INTERNAL internal:YES];
-    
+
+            *internal = [manager.wallet addressesWithGapLimit:SEQUENCE_GAP_LIMIT_INTERNAL internal:YES];
+
     for (NSString *address in [external arrayByAddingObjectsFromArray:internal]) {
         NSData *hash = address.addressToHash160;
         
@@ -1616,9 +1637,16 @@ static const char *dns_seeds[] = {
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *kvErr = nil;
+            
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(txTimeout:) object:hash];
             [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerTxStatusNotification object:nil];
             if (callback) callback(nil);
+
+            [[BRAPIClient sharedClient].kv
+             set:[[BRTxMetadataObject alloc] initWithTransaction:tx exchangeRate:manager.localCurrencyPrice
+                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
+                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
         });
     }
     
@@ -1675,12 +1703,12 @@ static const char *dns_seeds[] = {
     // track the observed bloom filter false positive rate using a low pass filter to smooth out variance
     if (peer == self.downloadPeer && block.totalTransactions > 0) {
         NSMutableSet *fp = [NSMutableSet setWithArray:txHashes];
-        
+
         // 1% low pass filter, also weights each block by total transactions, using 1400 tx per block as typical
         [fp minusSet:self.nonFpTx]; // wallet tx are not false-positives
         [self.nonFpTx removeAllObjects];
         self.fpRate = self.fpRate*(1.0 - 0.01*block.totalTransactions/1400) + 0.01*fp.count/1400;
-        
+
         // false positive rate sanity check
         if (self.downloadPeer.status == BRPeerStatusConnected && self.fpRate > BLOOM_DEFAULT_FALSEPOSITIVE_RATE*10.0) {
             NSLog(@"%@:%d bloom filter false positive rate %f too high after %d blocks, disconnecting...", peer.host,
@@ -1875,10 +1903,10 @@ static const char *dns_seeds[] = {
         if (p.feePerKb > maxFeePerKb) secondFeePerKb = maxFeePerKb, maxFeePerKb = p.feePerKb;
     }
     
-    if (secondFeePerKb*3/2 > MIN_FEE_PER_KB && secondFeePerKb*3/2 <= MAX_FEE_PER_KB &&
-        secondFeePerKb*3/2 > manager.wallet.feePerKb) {
-        NSLog(@"increasing feePerKb to %llu based on feefilter messages from peers", secondFeePerKb*3/2);
-        manager.wallet.feePerKb = secondFeePerKb*3/2;
+    if (secondFeePerKb*2 > MIN_FEE_PER_KB && secondFeePerKb*2 <= MAX_FEE_PER_KB &&
+        secondFeePerKb*2 > manager.wallet.feePerKb) {
+        NSLog(@"increasing feePerKb to %llu based on feefilter messages from peers", secondFeePerKb*2);
+        manager.wallet.feePerKb = secondFeePerKb*2;
     }
 }
 
@@ -1924,7 +1952,7 @@ static const char *dns_seeds[] = {
     return tx;
 }
 
-#pragma mark - UIAlertViewDelegate
+// MARK: - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {

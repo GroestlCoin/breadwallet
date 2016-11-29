@@ -317,6 +317,7 @@ static NSString *sanitizeString(NSString *s)
     };
     
     NSString *message = [NSString stringWithFormat:
+
                          NSLocalizedString(@"%@ is requesting authentication using your groestlcoin wallet.", nil),
                          bitid.siteName];
     UIAlertController *alertController =
@@ -836,11 +837,14 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
             [set addObjectsFromArray:[str componentsSeparatedByCharactersInSet:separators]];
         }
         
-        if (img && &CIDetectorTypeQRCode) {
+        if (img) {
             @synchronized ([CIContext class]) {
-                for (CIQRCodeFeature *qr in [[CIDetector detectorOfType:CIDetectorTypeQRCode context:[CIContext
-                                              contextWithOptions:@{kCIContextUseSoftwareRenderer:@(YES)}] options:nil]
-                                             featuresInImage:[CIImage imageWithCGImage:img.CGImage]]) {
+                CIContext *context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer:@(YES)}];
+                
+                if (! context) context = [CIContext context];
+
+                for (CIQRCodeFeature *qr in [[CIDetector detectorOfType:CIDetectorTypeQRCode context:context
+                                              options:nil] featuresInImage:[CIImage imageWithCGImage:img.CGImage]]) {
                     [set addObject:[qr.messageString
                                     stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                 }
@@ -914,7 +918,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     [self performSelector:@selector(cancel:) withObject:self afterDelay:0.1];
 }
 
-#pragma mark - IBAction
+// MARK: - IBAction
 
 - (IBAction)tip:(id)sender
 {
@@ -960,11 +964,14 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
         [set addObjectsFromArray:[str componentsSeparatedByCharactersInSet:separators]];
     }
     
-    if (img && &CIDetectorTypeQRCode) {
+    if (img) {
         @synchronized ([CIContext class]) {
-            for (CIQRCodeFeature *qr in [[CIDetector detectorOfType:CIDetectorTypeQRCode
-                                         context:[CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer:@(YES)}]
-                                         options:nil] featuresInImage:[CIImage imageWithCGImage:img.CGImage]]) {
+            CIContext *context = [CIContext contextWithOptions:@{kCIContextUseSoftwareRenderer:@(YES)}];
+            
+            if (! context) context = [CIContext context];
+
+            for (CIQRCodeFeature *qr in [[CIDetector detectorOfType:CIDetectorTypeQRCode context:context options:nil]
+                                         featuresInImage:[CIImage imageWithCGImage:img.CGImage]]) {
                 [set addObject:[qr.messageString
                                 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
             }
@@ -1001,7 +1008,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     [self updateClipboardText];
 }
 
-#pragma mark - BRAmountViewControllerDelegate
+// MARK: - BRAmountViewControllerDelegate
 
 - (void)amountViewController:(BRAmountViewController *)amountViewController selectedAmount:(uint64_t)amount
 {
@@ -1009,7 +1016,7 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     [self confirmProtocolRequest:self.request];
 }
 
-#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+// MARK: - AVCaptureMetadataOutputObjectsDelegate
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects
 fromConnection:(AVCaptureConnection *)connection
@@ -1022,14 +1029,17 @@ fromConnection:(AVCaptureConnection *)connection
         NSString *addr = [codeObject.stringValue stringByTrimmingCharactersInSet:
                           [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BRPaymentRequest *request = [BRPaymentRequest requestWithString:addr];
-        if ([BRBitID isBitIDURL:request.url]) {
+
+        if (request.url && [BRBitID isBitIDURL:request.url]) {
+
             [self.scanController stop];
             [self.navigationController dismissViewControllerAnimated:YES completion:^{
                 [self handleBitIDURL:request.url];
                 [self resetQRGuide];
             }];
-        } else if (request.isValid || [addr isValidBitcoinPrivateKey] || [addr isValidBitcoinBIP38Key] ||
-            (request.r.length > 0 && [request.scheme isEqual:@"groestlcoin"])) {
+
+        } else if ((request.isValid && [request.scheme isEqual:@"groestlcoin"]) || [addr isValidBitcoinPrivateKey] ||
+                   [addr isValidBitcoinBIP38Key]) {
             self.scanController.cameraGuide.image = [UIImage imageNamed:@"cameraguide-green"];
             [self.scanController stop];
             [BREventManager saveEvent:@"send:valid_qr_scan"];
@@ -1114,7 +1124,7 @@ fromConnection:(AVCaptureConnection *)connection
     }
 }
 
-#pragma mark - UIAlertViewDelegate
+// MARK: - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -1153,7 +1163,7 @@ fromConnection:(AVCaptureConnection *)connection
     else if (self.url) [self handleURL:self.url];
 }
 
-#pragma mark UITextViewDelegate
+// MARK: UITextViewDelegate
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
@@ -1196,7 +1206,7 @@ fromConnection:(AVCaptureConnection *)connection
     return YES;
 }
 
-#pragma mark UIViewControllerAnimatedTransitioning
+// MARK: UIViewControllerAnimatedTransitioning
 
 // This is used for percent driven interactive transitions, as well as for container controllers that have companion
 // animations that might need to synchronize with the main animation.
@@ -1267,7 +1277,7 @@ fromConnection:(AVCaptureConnection *)connection
     }
 }
 
-#pragma mark - UIViewControllerTransitioningDelegate
+// MARK: - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
 presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source

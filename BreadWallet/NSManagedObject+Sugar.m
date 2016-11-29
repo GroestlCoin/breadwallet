@@ -33,7 +33,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 @implementation NSManagedObject (Sugar)
 
-#pragma mark - create objects
+// MARK: - create objects
 
 + (instancetype)managedObject
 {
@@ -64,11 +64,11 @@ static NSUInteger _fetchBatchSize = 100;
     return a;
 }
 
-#pragma mark - fetch existing objects
+// MARK: - fetch existing objects
 
 + (NSArray *)allObjects
 {
-    return [self fetchObjects:self.fetchRequest];
+    return [self fetchObjects:self.fetchReq];
 }
 
 + (NSArray *)objectsMatching:(NSString *)predicateFormat, ...
@@ -84,7 +84,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 + (NSArray *)objectsMatching:(NSString *)predicateFormat arguments:(va_list)args
 {
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.fetchReq;
     
     request.predicate = [NSPredicate predicateWithFormat:predicateFormat arguments:args];
     return [self fetchObjects:request];
@@ -97,7 +97,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 + (NSArray *)objectsSortedBy:(NSString *)key ascending:(BOOL)ascending offset:(NSUInteger)offset limit:(NSUInteger)limit
 {
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.fetchReq;
     
     request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:key ascending:ascending]];
     request.fetchOffset = offset;
@@ -129,11 +129,11 @@ static NSUInteger _fetchBatchSize = 100;
     return a;
 }
 
-#pragma mark - count exising objects
+// MARK: - count exising objects
 
 + (NSUInteger)countAllObjects
 {
-    return [self countObjects:self.fetchRequest];
+    return [self countObjects:self.fetchReq];
 }
 
 + (NSUInteger)countObjectsMatching:(NSString *)predicateFormat, ...
@@ -149,7 +149,7 @@ static NSUInteger _fetchBatchSize = 100;
 
 + (NSUInteger)countObjectsMatching:(NSString *)predicateFormat arguments:(va_list)args
 {
-    NSFetchRequest *request = self.fetchRequest;
+    NSFetchRequest *request = self.fetchReq;
     
     request.predicate = [NSPredicate predicateWithFormat:predicateFormat arguments:args];
     return [self countObjects:request];
@@ -179,7 +179,7 @@ static NSUInteger _fetchBatchSize = 100;
     return count;
 }
 
-#pragma mark - delete objects
+// MARK: - delete objects
 
 + (NSUInteger)deleteObjects:(NSArray *)objects
 {
@@ -192,7 +192,7 @@ static NSUInteger _fetchBatchSize = 100;
     return objects.count;
 }
 
-#pragma mark - core data stack
+// MARK: - core data stack
 
 // call this before any NSManagedObject+Sugar methods to use a concurrency type other than NSMainQueueConcurrencyType
 + (void)setConcurrencyType:(NSManagedObjectContextConcurrencyType)type
@@ -305,7 +305,7 @@ static NSUInteger _fetchBatchSize = 100;
     }];
 }
 
-#pragma mark - entity methods
+// MARK: - entity methods
 
 // override this if entity name differs from class name
 + (NSString *)entityName
@@ -313,7 +313,7 @@ static NSUInteger _fetchBatchSize = 100;
     return NSStringFromClass([self class]);
 }
 
-+ (NSFetchRequest *)fetchRequest
++ (NSFetchRequest *)fetchReq
 {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:self.entityName];
 

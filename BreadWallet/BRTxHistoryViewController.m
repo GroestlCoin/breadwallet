@@ -87,17 +87,6 @@ static NSString *dateFormat(NSString *template)
     [self.navigationController.view insertSubview:self.wallpaper atIndex:0];
     self.navigationController.delegate = self;
     self.moreTx = YES;
-    
-    if ([WKWebView class] && [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin]) { // only available on iOS 8 and above
-#if DEBUG
-        self.buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy-staging" mountPoint:@"/buy"];
-//        self.buyController.debugEndpoint = @"http://localhost:8080";
-#else
-        self.buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy" mountPoint:@"/buy"];
-#endif
-        [self.buyController startServer];
-        [self.buyController preload];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -220,6 +209,11 @@ static NSString *dateFormat(NSString *template)
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.buyController preload];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     if (self.isMovingFromParentViewController || self.navigationController.isBeingDismissed) {
@@ -237,7 +231,8 @@ static NSString *dateFormat(NSString *template)
         if (self.syncFailedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncFailedObserver];
         self.syncFailedObserver = nil;
         self.wallpaper.clipsToBounds = YES;
-        if (self.buyController) { [self.buyController stopServer]; }
+        
+        self.buyController = nil;
     }
 
     [super viewWillDisappear:animated];
@@ -260,6 +255,23 @@ static NSString *dateFormat(NSString *template)
     if (self.syncStartedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncStartedObserver];
     if (self.syncFinishedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncFinishedObserver];
     if (self.syncFailedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncFailedObserver];
+}
+
+- (BRWebViewController *)buyController {
+    if (_buyController) {
+        return _buyController;
+    }
+    if ([WKWebView class] && [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin]) { // only available on iOS 8 and above
+#if DEBUG
+        _buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy-staging" mountPoint:@"/buy"];
+        //        self.buyController.debugEndpoint = @"http://localhost:8080";
+#else
+        _buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy" mountPoint:@"/buy"];
+#endif
+        [_buyController startServer];
+        [_buyController preload];
+    }
+    return _buyController;
 }
 
 - (uint32_t)blockHeight
@@ -337,7 +349,7 @@ static NSString *dateFormat(NSString *template)
     return date;
 }
 
-#pragma mark - IBAction
+// MARK: - IBAction
 
 - (IBAction)done:(id)sender
 {
@@ -425,7 +437,7 @@ static NSString *dateFormat(NSString *template)
     [self presentViewController:self.buyController animated:YES completion:nil];
 }
 
-#pragma mark - UITableViewDataSource
+// MARK: - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -610,7 +622,7 @@ static NSString *dateFormat(NSString *template)
 //    return nil;
 //}
 
-#pragma mark - UITableViewDelegate
+// MARK: - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -715,7 +727,7 @@ static NSString *dateFormat(NSString *template)
     }
 }
 
-#pragma mark - UIAlertViewDelegate
+// MARK: - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -732,7 +744,7 @@ static NSString *dateFormat(NSString *template)
     }    
 }
 
-#pragma mark - UIViewControllerAnimatedTransitioning
+// MARK: - UIViewControllerAnimatedTransitioning
 
 // This is used for percent driven interactive transitions, as well as for container controllers that have companion
 // animations that might need to synchronize with the main animation.
@@ -767,7 +779,7 @@ static NSString *dateFormat(NSString *template)
     }];
 }
 
-#pragma mark - UINavigationControllerDelegate
+// MARK: - UINavigationControllerDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
 animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC
@@ -776,7 +788,7 @@ toViewController:(UIViewController *)toVC
     return self;
 }
 
-#pragma mark - UIViewControllerTransitioningDelegate
+// MARK: - UIViewControllerTransitioningDelegate
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented
 presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source

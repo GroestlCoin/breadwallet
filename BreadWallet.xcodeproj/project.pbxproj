@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 47;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,7 +20,14 @@
 		222040C81C1A3803005CE1C3 /* BRHTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222040C71C1A3803005CE1C3 /* BRHTTPServerTests.swift */; };
 		222E7F561C46E9B8009AB45D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222E7F551C46E9B8009AB45D /* Security.framework */; };
 		222E7F581C46E9BE009AB45D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222E7F571C46E9BE009AB45D /* SystemConfiguration.framework */; };
+		2230E23D1D60FA52001EF2E9 /* NSDataExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230E23C1D60FA52001EF2E9 /* NSDataExtensionTests.swift */; };
+		2230E23F1D6109AD001EF2E9 /* BRKVStoreObjectsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230E23E1D6109AD001EF2E9 /* BRKVStoreObjectsTests.swift */; };
+		2230E2411D610A63001EF2E9 /* BRCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230E2401D610A63001EF2E9 /* BRCoding.swift */; };
+		2230E2431D610C91001EF2E9 /* BRCodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230E2421D610C91001EF2E9 /* BRCodingTests.swift */; };
+		2230E2441D610D9A001EF2E9 /* BRCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2230E2401D610A63001EF2E9 /* BRCoding.swift */; };
+		22331F441D60312F00F29551 /* BRKVStoreObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22331F431D60312F00F29551 /* BRKVStoreObjects.swift */; };
 		225383011C694D7400968BEE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225383001C694D7400968BEE /* CoreLocation.framework */; };
+		22649FED1DAABDB200042EBC /* BRCameraPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22649FEC1DAABDB200042EBC /* BRCameraPlugin.swift */; };
 		2284B63F1C7BD28F0012ECDF /* BRAWKeypad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F45A0A1C30EAB700B07A15 /* BRAWKeypad.swift */; };
 		229279981C695C4200C98E78 /* BRHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229279971C695C4200C98E78 /* BRHTTPServer.swift */; };
 		2292799A1C695CAE00C98E78 /* BRHTTPFileMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229279991C695CAE00C98E78 /* BRHTTPFileMiddleware.swift */; };
@@ -29,10 +36,14 @@
 		229279A11C695D7900C98E78 /* BRBSPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229279A01C695D7900C98E78 /* BRBSPatch.swift */; };
 		229279A51C695DE700C98E78 /* BRAPIProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229279A41C695DE700C98E78 /* BRAPIProxy.swift */; };
 		229279A81C6960FC00C98E78 /* BRGeoLocationPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229279A71C6960FC00C98E78 /* BRGeoLocationPlugin.swift */; };
+		2299CF371D5C0D0B0055EA28 /* BRReplicatedKVStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2299CF361D5C0D0B0055EA28 /* BRReplicatedKVStore.swift */; };
+		2299CF391D5C32B70055EA28 /* BRReplicatedKVStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2299CF381D5C32B70055EA28 /* BRReplicatedKVStoreTests.swift */; };
+		22B5F7841D665A0300657B77 /* BRKVStorePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B5F7831D665A0300657B77 /* BRKVStorePlugin.swift */; };
 		22B6A4481C0E963900673913 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B6A4471C0E963900673913 /* libbz2.tbd */; };
 		22B6A44A1C0ECB7800673913 /* BRBSPatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B6A4491C0ECB7800673913 /* BRBSPatchTests.swift */; };
 		22BF17471CDF831800AA41C6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BF17461CDF831800AA41C6 /* Extensions.swift */; };
 		22D3613D1C56F2CD0057CF76 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D3613C1C56F2CD0057CF76 /* libsqlite3.tbd */; };
+		22DC3A231D2C8DD100A72EA5 /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22DC3A221D2C8DD100A72EA5 /* PushKit.framework */; };
 		22DE8CF11D02407F007F07F3 /* BRWalletConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DE8CF01D02407F007F07F3 /* BRWalletConstants.m */; };
 		22DE8CF21D02407F007F07F3 /* BRWalletConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DE8CF01D02407F007F07F3 /* BRWalletConstants.m */; };
 		22DE8CF31D02407F007F07F3 /* BRWalletConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 22DE8CF01D02407F007F07F3 /* BRWalletConstants.m */; };
@@ -201,7 +212,13 @@
 		222040C71C1A3803005CE1C3 /* BRHTTPServerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRHTTPServerTests.swift; sourceTree = "<group>"; };
 		222E7F551C46E9B8009AB45D /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		222E7F571C46E9BE009AB45D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		2230E23C1D60FA52001EF2E9 /* NSDataExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataExtensionTests.swift; sourceTree = "<group>"; };
+		2230E23E1D6109AD001EF2E9 /* BRKVStoreObjectsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRKVStoreObjectsTests.swift; sourceTree = "<group>"; };
+		2230E2401D610A63001EF2E9 /* BRCoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoding.swift; sourceTree = "<group>"; };
+		2230E2421D610C91001EF2E9 /* BRCodingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCodingTests.swift; sourceTree = "<group>"; };
+		22331F431D60312F00F29551 /* BRKVStoreObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRKVStoreObjects.swift; sourceTree = "<group>"; };
 		225383001C694D7400968BEE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		22649FEC1DAABDB200042EBC /* BRCameraPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCameraPlugin.swift; sourceTree = "<group>"; };
 		229279971C695C4200C98E78 /* BRHTTPServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRHTTPServer.swift; sourceTree = "<group>"; };
 		229279991C695CAE00C98E78 /* BRHTTPFileMiddleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRHTTPFileMiddleware.swift; sourceTree = "<group>"; };
 		2292799B1C695CD600C98E78 /* BRHTTPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRHTTPRouter.swift; sourceTree = "<group>"; };
@@ -209,10 +226,14 @@
 		229279A01C695D7900C98E78 /* BRBSPatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRBSPatch.swift; sourceTree = "<group>"; };
 		229279A41C695DE700C98E78 /* BRAPIProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIProxy.swift; sourceTree = "<group>"; };
 		229279A71C6960FC00C98E78 /* BRGeoLocationPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRGeoLocationPlugin.swift; sourceTree = "<group>"; };
+		2299CF361D5C0D0B0055EA28 /* BRReplicatedKVStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRReplicatedKVStore.swift; sourceTree = "<group>"; };
+		2299CF381D5C32B70055EA28 /* BRReplicatedKVStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRReplicatedKVStoreTests.swift; sourceTree = "<group>"; };
+		22B5F7831D665A0300657B77 /* BRKVStorePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRKVStorePlugin.swift; sourceTree = "<group>"; };
 		22B6A4471C0E963900673913 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		22B6A4491C0ECB7800673913 /* BRBSPatchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRBSPatchTests.swift; sourceTree = "<group>"; };
 		22BF17461CDF831800AA41C6 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		22D3613C1C56F2CD0057CF76 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		22DC3A221D2C8DD100A72EA5 /* PushKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PushKit.framework; path = System/Library/Frameworks/PushKit.framework; sourceTree = SDKROOT; };
 		22DE8CF01D02407F007F07F3 /* BRWalletConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRWalletConstants.m; sourceTree = "<group>"; };
 		22F45A0A1C30EAB700B07A15 /* BRAWKeypad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAWKeypad.swift; sourceTree = "<group>"; };
 		22F45A0C1C3326CC00B07A15 /* BRUserDefaultsSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUserDefaultsSwitchCell.h; sourceTree = "<group>"; };
@@ -491,6 +512,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22DC3A231D2C8DD100A72EA5 /* PushKit.framework in Frameworks */,
 				225383011C694D7400968BEE /* CoreLocation.framework in Frameworks */,
 				22D3613D1C56F2CD0057CF76 /* libsqlite3.tbd in Frameworks */,
 				222E7F581C46E9BE009AB45D /* SystemConfiguration.framework in Frameworks */,
@@ -536,6 +558,7 @@
 				220128D81C77B3100001CAC1 /* BRHTTPIndexMiddleware.swift */,
 				2292799B1C695CD600C98E78 /* BRHTTPRouter.swift */,
 				220128D41C76E1550001CAC1 /* BRWebSocket.swift */,
+				2299CF361D5C0D0B0055EA28 /* BRReplicatedKVStore.swift */,
 				229279A61C6960B200C98E78 /* HTTP Plugins */,
 				222040C31C1A0903005CE1C3 /* BRWebViewController.swift */,
 			);
@@ -548,6 +571,7 @@
 				2292799E1C695D2800C98E78 /* BRTar.swift */,
 				229279A01C695D7900C98E78 /* BRBSPatch.swift */,
 				22BF17461CDF831800AA41C6 /* Extensions.swift */,
+				2230E2401D610A63001EF2E9 /* BRCoding.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -558,6 +582,8 @@
 				229279A71C6960FC00C98E78 /* BRGeoLocationPlugin.swift */,
 				220128D61C76E4F30001CAC1 /* BRWalletPlugin.swift */,
 				22005B951C9276AF00F87733 /* BRLinkPlugin.swift */,
+				22B5F7831D665A0300657B77 /* BRKVStorePlugin.swift */,
+				22649FEC1DAABDB200042EBC /* BRCameraPlugin.swift */,
 			);
 			name = "HTTP Plugins";
 			sourceTree = "<group>";
@@ -655,6 +681,7 @@
 				752E28A919234AE300DB5A3C /* BRTxOutputEntity.m */,
 				75F2E0D41BEAA6A400EAE861 /* BRTxMetadataEntity.h */,
 				75F2E0D51BEAA6A400EAE861 /* BRTxMetadataEntity.m */,
+				22331F431D60312F00F29551 /* BRKVStoreObjects.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -816,6 +843,7 @@
 		75D5F3C0191EC270004AB296 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				22DC3A221D2C8DD100A72EA5 /* PushKit.framework */,
 				225383001C694D7400968BEE /* CoreLocation.framework */,
 				22D3613C1C56F2CD0057CF76 /* libsqlite3.tbd */,
 				222E7F571C46E9BE009AB45D /* SystemConfiguration.framework */,
@@ -876,6 +904,10 @@
 				22FCD22B1C0E68C80066D798 /* BRTarTests.swift */,
 				22B6A4491C0ECB7800673913 /* BRBSPatchTests.swift */,
 				222040C71C1A3803005CE1C3 /* BRHTTPServerTests.swift */,
+				2299CF381D5C32B70055EA28 /* BRReplicatedKVStoreTests.swift */,
+				2230E23C1D60FA52001EF2E9 /* NSDataExtensionTests.swift */,
+				2230E2421D610C91001EF2E9 /* BRCodingTests.swift */,
+				2230E23E1D6109AD001EF2E9 /* BRKVStoreObjectsTests.swift */,
 				75CE50B51B5216F100DBC18C /* Info.plist */,
 				75EDC0E71CD92EA90090B838 /* BreadWalletTests-Bridging-Header.h */,
 			);
@@ -1097,12 +1129,13 @@
 			attributes = {
 				CLASSPREFIX = BR;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Aaron Voisine";
 				TargetAttributes = {
 					31D68B4F1C23B6C10030FAAA = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = H4T3K787ZT;
+						LastSwiftMigration = 0800;
 						TestTargetID = 75D5F3BD191EC270004AB296;
 					};
 					75001D3D1A1EE89500585F55 = {
@@ -1110,6 +1143,7 @@
 					};
 					75D5F3BD191EC270004AB296 = {
 						DevelopmentTeam = 4CCXJT7SPT;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -1118,20 +1152,26 @@
 								enabled = 1;
 							};
 							com.apple.DataProtection = {
+								enabled = 0;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
 					};
 					75D5F3E4191EC270004AB296 = {
+						LastSwiftMigration = 0800;
 						TestTargetID = 75D5F3BD191EC270004AB296;
 					};
 					BA913BDD1BD57E4D005A7C0E = {
 						CreatedOnToolsVersion = 7.0.1;
 						DevelopmentTeam = 4R7S6N88W9;
+						LastSwiftMigration = 0800;
 					};
 					BA913BE91BD57E4D005A7C0E = {
 						CreatedOnToolsVersion = 7.0.1;
 						DevelopmentTeam = 4R7S6N88W9;
+						LastSwiftMigration = 0800;
 					};
 					BAE12BE41B2DEE7F00895CC5 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -1145,7 +1185,7 @@
 				};
 			};
 			buildConfigurationList = 75D5F3B9191EC270004AB296 /* Build configuration list for PBXProject "BreadWallet" */;
-			compatibilityVersion = "Xcode 6.3";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1262,6 +1302,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2230E2441D610D9A001EF2E9 /* BRCoding.swift in Sources */,
 				22F04A001C9714EF00F137D8 /* BRUserDefaultsSwitchCell.m in Sources */,
 				752E28AA19234AE300DB5A3C /* BRAddressEntity.m in Sources */,
 				75AA5F55194143D5003F23BD /* BRBouncyBurgerButton.m in Sources */,
@@ -1298,6 +1339,7 @@
 				220128D91C77B3100001CAC1 /* BRHTTPIndexMiddleware.swift in Sources */,
 				752E28DB19234C3600DB5A3C /* BRWalletManager.m in Sources */,
 				752E28D319234C3600DB5A3C /* BRMerkleBlock.m in Sources */,
+				22331F441D60312F00F29551 /* BRKVStoreObjects.swift in Sources */,
 				222040C41C1A0903005CE1C3 /* BRWebViewController.swift in Sources */,
 				752E28D019234C3600DB5A3C /* BRBloomFilter.m in Sources */,
 				752E28D619234C3600DB5A3C /* BRPeer.m in Sources */,
@@ -1313,6 +1355,7 @@
 				75878BBF192ACD46002505AB /* BRAmountViewController.m in Sources */,
 				759816E719357D6F005060EA /* BRBubbleView.m in Sources */,
 				22F7B6DA1D14A665007CC848 /* BRActivityView.swift in Sources */,
+				22B5F7841D665A0300657B77 /* BRKVStorePlugin.swift in Sources */,
 				757BE7E3192C0E9D0061CB20 /* BRRestoreViewController.m in Sources */,
 				757BE7E6192C1FF70061CB20 /* BRWelcomeViewController.m in Sources */,
 				757BE7E9192D4E880061CB20 /* BRSeedViewController.m in Sources */,
@@ -1320,10 +1363,12 @@
 				220128D31C753C670001CAC1 /* BRSocketHelpers.c in Sources */,
 				752E28E919234DA200DB5A3C /* NSManagedObject+Sugar.m in Sources */,
 				BA7B53541BDAA0A800355E8D /* BRAppleWatchTransactionData.m in Sources */,
+				2299CF371D5C0D0B0055EA28 /* BRReplicatedKVStore.swift in Sources */,
 				751B2B5C1B68911700EA87FB /* BRTxHistoryViewController.m in Sources */,
 				752E28EA19234DA200DB5A3C /* NSMutableData+Bitcoin.m in Sources */,
 				752E28EB19234DA200DB5A3C /* NSString+Bitcoin.m in Sources */,
 				757C89521A2FCE420076B373 /* BRSettingsViewController.m in Sources */,
+				22649FED1DAABDB200042EBC /* BRCameraPlugin.swift in Sources */,
 				220128D51C76E1550001CAC1 /* BRWebSocket.swift in Sources */,
 				75D5F3D2191EC270004AB296 /* BRAppDelegate.m in Sources */,
 				759FBB36193290F600AB4465 /* BRRootViewController.m in Sources */,
@@ -1339,10 +1384,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2230E23D1D60FA52001EF2E9 /* NSDataExtensionTests.swift in Sources */,
+				2230E2431D610C91001EF2E9 /* BRCodingTests.swift in Sources */,
 				22DE8CF31D02407F007F07F3 /* BRWalletConstants.m in Sources */,
+				2299CF391D5C32B70055EA28 /* BRReplicatedKVStoreTests.swift in Sources */,
 				222040C81C1A3803005CE1C3 /* BRHTTPServerTests.swift in Sources */,
+				2230E2411D610A63001EF2E9 /* BRCoding.swift in Sources */,
 				75D5F3F3191EC270004AB296 /* BreadWalletTests.m in Sources */,
 				FB6558111D3F1A6B003946E3 /* NSData+Groestl.m in Sources */,
+				2230E23F1D6109AD001EF2E9 /* BRKVStoreObjectsTests.swift in Sources */,
 				22FCD22C1C0E68C80066D798 /* BRTarTests.swift in Sources */,
 				22B6A44A1C0ECB7800673913 /* BRBSPatchTests.swift in Sources */,
 			);
@@ -1535,6 +1585,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWalletUITests/BreadWalletUITests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = breadwallet;
 				USES_XCTRUNNER = YES;
 			};
@@ -1551,6 +1602,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BreadWalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWalletUITests/BreadWalletUITests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = breadwallet;
 				USES_XCTRUNNER = YES;
 			};
@@ -1574,6 +1626,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1583,11 +1636,13 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1607,11 +1662,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-frandom-seed=$@";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				ZERO_AR_DATE = 1;
 			};
 			name = Debug;
@@ -1620,6 +1677,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1629,11 +1687,13 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1647,10 +1707,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "-frandom-seed=$@";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				VALIDATE_PRODUCT = YES;
 				ZERO_AR_DATE = 1;
 			};
@@ -1674,12 +1736,14 @@
 					"$(SRCROOT)",
 				);
 				INFOPLIST_FILE = BreadWallet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.groestlcoin.groestlwallet123123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWallet/breadwallet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
@@ -1702,11 +1766,13 @@
 					"$(SRCROOT)",
 				);
 				INFOPLIST_FILE = BreadWallet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = org.groestlcoin.groestlwallet123123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWallet/breadwallet-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
@@ -1725,6 +1791,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWalletTests/BreadWalletTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -1742,6 +1809,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.groestlcoin.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "BreadWalletTests/BreadWalletTests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
@@ -1749,9 +1817,9 @@
 		BA913BFB1BD57E4E005A7C0E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = WatchApp_Extension;
 				INFOPLIST_FILE = WatchApp/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet.watchkitapp;
@@ -1759,6 +1827,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -1767,15 +1836,16 @@
 		BA913BFC1BD57E4E005A7C0E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = WatchApp_Extension;
 				INFOPLIST_FILE = WatchApp/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = org.groestcoin.groestlwallet.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -1794,6 +1864,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchApp Extension/WatchApp Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -1811,6 +1882,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WatchApp Extension/WatchApp Extension-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};

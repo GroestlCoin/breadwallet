@@ -223,6 +223,7 @@ completion:(void (^)(BRPaymentProtocolRequest *req, NSError *error))completion
 
     [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"]; // BIP74 user-agent (bitpay, unpublished)
     [req setValue:@"application/groestlcoin-paymentrequest" forHTTPHeaderField:@"Accept"];
+
 //  [req addValue:@"text/uri-list" forHTTPHeaderField:@"Accept"]; // breaks some BIP72 implementations, notably bitpay's
 
     if (! req) {
@@ -289,9 +290,11 @@ completion:(void (^)(BRPaymentProtocolACK *ack, NSError *error))completion
         return;
     }
 
+
     [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
     [req setValue:@"application/groestlcoin-payment" forHTTPHeaderField:@"Content-Type"];
     [req addValue:@"application/groestlcoin-paymentack" forHTTPHeaderField:@"Accept"];
+
     req.HTTPMethod = @"POST";
     req.HTTPBody = payment.data;
 

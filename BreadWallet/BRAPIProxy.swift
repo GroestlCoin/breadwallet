@@ -31,7 +31,7 @@ import Foundation
 //
 // Clients should set the "X-Should-Verify" to enable response verification and can set
 // "X-Should-Authenticate" to sign requests with the users private authentication key
-@objc public class BRAPIProxy: NSObject, BRHTTPMiddleware {
+@objc open class BRAPIProxy: NSObject, BRHTTPMiddleware {
     var mountPoint: String
     var apiInstance: BRAPIClient
     var shouldVerifyHeader: String = "x-should-verify"
@@ -42,32 +42,35 @@ import Foundation
             shouldVerifyHeader,
             shouldAuthHeader,
             "connection",
-            "authorization"
+            "authorization",
+            "host",
+            "user-agent"
         ]
     }
     
-    var bannedReceiveHeaders: [String] = ["content-length", "connection"]
+    var bannedReceiveHeaders: [String] = ["content-length", "content-encoding", "connection"]
     
     init(mountAt: String, client: BRAPIClient) {
         mountPoint = mountAt
         if mountPoint.hasSuffix("/") {
-            mountPoint = mountPoint.substringToIndex(mountPoint.endIndex.advancedBy(-1))
+            mountPoint = mountPoint.substring(to: mountPoint.characters.index(mountPoint.endIndex, offsetBy: -1))
         }
         apiInstance = client
         super.init()
     }
     
-    public func handle(request: BRHTTPRequest, next: (BRHTTPMiddlewareResponse) -> Void) {
+    open func handle(_ request: BRHTTPRequest, next: @escaping (BRHTTPMiddlewareResponse) -> Void) {
         if request.path.hasPrefix(mountPoint) {
-            var path = request.path.substringFromIndex(request.path.startIndex.advancedBy(mountPoint.characters.count))
+            let idx = request.path.characters.index(request.path.startIndex, offsetBy: mountPoint.characters.count)
+            var path = request.path.substring(from: idx)
             if request.queryString.utf8.count > 0 {
                 path += "?\(request.queryString)"
             }
-            let nsReq = NSMutableURLRequest(URL: apiInstance.url(path))
-            nsReq.HTTPMethod = request.method
+            var nsReq = URLRequest(url: apiInstance.url(path))
+            nsReq.httpMethod = request.method
             // copy body
             if request.hasBody {
-                nsReq.HTTPBody = request.body()
+                nsReq.httpBody = request.body()
             }
             // copy headers
             for (hdrName, hdrs) in request.headers {
@@ -78,8 +81,8 @@ import Foundation
             }
             
             var auth = false
-            if let authHeader = request.headers[shouldAuthHeader] where authHeader.count > 0 {
-                if authHeader[0].lowercaseString == "yes" {
+            if let authHeader = request.headers[shouldAuthHeader] , authHeader.count > 0 {
+                if authHeader[0].lowercased() == "yes" || authHeader[0].lowercased() == "true" {
                     auth = true
                 }
             }
@@ -88,17 +91,18 @@ import Foundation
                     if let httpResp = nsHttpResponse {
                         var hdrs = [String: [String]]()
                         for (k, v) in httpResp.allHeaderFields {
-                            if self.bannedReceiveHeaders.contains((k as! String).lowercaseString) { continue }
+                            if self.bannedReceiveHeaders.contains((k as! String).lowercased()) { continue }
                             hdrs[k as! String] = [v as! String]
                         }
                         var body: [UInt8]? = nil
                         if let bod = nsData {
-                            let b = UnsafeBufferPointer<UInt8>(start: UnsafePointer(bod.bytes), count: bod.length)
+                            let bp = (bod as NSData).bytes.bindMemory(to: UInt8.self, capacity: bod.count)
+                            let b = UnsafeBufferPointer<UInt8>(start: bp, count: bod.count)
                             body = Array(b)
                         }
                         let resp = BRHTTPResponse(
                             request: request, statusCode: httpResp.statusCode,
-                            statusReason: NSHTTPURLResponse.localizedStringForStatusCode(httpResp.statusCode),
+                            statusReason: HTTPURLResponse.localizedString(forStatusCode: httpResp.statusCode),
                             headers: hdrs, body: body)
                         return next(BRHTTPMiddlewareResponse(request: request, response: resp))
                     } else {

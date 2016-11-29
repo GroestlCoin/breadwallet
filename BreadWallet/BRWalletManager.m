@@ -49,9 +49,6 @@
 #define BITCOIN_TICKER_FAILOVER_URL  @"https://bitpay.com/rates"
 #define POLONIEX_TICKER_URL  @"https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_GRS&depth=1"
 
-#define USER_AGENT [NSString stringWithFormat:@"/breadwallet:%@/",\
-                    NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]]
-
 #define SEED_ENTROPY_LENGTH   (128/8)
 #define SEC_ATTR_SERVICE      @"com.groestlcoin.groestlwallet"
 #define DEFAULT_CURRENCY_CODE @"USD"
@@ -488,7 +485,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
         NSMutableData *entropy = [NSMutableData secureDataWithLength:SEED_ENTROPY_LENGTH];
         NSTimeInterval time = [NSDate timeIntervalSinceReferenceDate];
 
-        SecRandomCopyBytes(kSecRandomDefault, entropy.length, entropy.mutableBytes);
+        if (SecRandomCopyBytes(kSecRandomDefault, entropy.length, entropy.mutableBytes) != 0) return nil;
 
         NSString *phrase = [self.mnemonic encodePhrase:entropy];
 
@@ -523,7 +520,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     }
 }
 
-#pragma mark - authentication
+// MARK: - authentication
 
 // prompts user to authenticate with touch id or passcode
 - (BOOL)authenticateWithPrompt:(NSString *)authprompt andTouchId:(BOOL)touchId
@@ -567,7 +564,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     if ([self authenticatePinWithTitle:[NSString stringWithFormat:NSLocalizedString(@"passcode for %@", nil),
                                         DISPLAY_NAME] message:authprompt]) {
         [self.alertView dismissWithClickedButtonIndex:self.alertView.cancelButtonIndex animated:YES];
-        [self hideKeyboard];
+//        [self hideKeyboard];
         return YES;
     }
     else return NO;
@@ -662,7 +659,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     for (;;) {
         while ((! self.didPresent || self.alertView.visible) && self.currentPin.length < 4) {
             [[NSRunLoop mainRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
-            if (! self.pinField.isFirstResponder) [self.pinField becomeFirstResponder];
+            if (self.didPresent && ! self.pinField.isFirstResponder) [self.pinField becomeFirstResponder];
         }
 
         if (! self.alertView.visible) break; // user canceled
@@ -798,7 +795,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
             self.pinField.text = self.currentPin = nil;
             setKeychainString(pin, PIN_KEY, NO);
             [self.alertView dismissWithClickedButtonIndex:self.alertView.cancelButtonIndex animated:YES];
-            [self hideKeyboard];
+//            [self hideKeyboard];
             return YES;
         }
 
@@ -842,18 +839,18 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 }
 
 // the keyboard can take a second or more to dismiss, this hides it quickly to improve perceived response time
-- (void)hideKeyboard
-{
-    for (UIWindow *w in [UIApplication sharedApplication].windows) {
-        if (w.windowLevel == UIWindowLevelNormal || w.windowLevel == UIWindowLevelAlert ||
-            w.windowLevel == UIWindowLevelStatusBar) continue;
-        [UIView animateWithDuration:0.2 animations:^{ w.alpha = 0; }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2*NSEC_PER_SEC), dispatch_get_main_queue(), ^{ w.alpha = 1; });
-        break;
-    }
-}
+//- (void)hideKeyboard
+//{
+//    for (UIWindow *w in [UIApplication sharedApplication].windows) {
+//        if (w.windowLevel == UIWindowLevelNormal || w.windowLevel == UIWindowLevelAlert ||
+//            w.windowLevel == UIWindowLevelStatusBar) continue;
+//        [UIView animateWithDuration:0.2 animations:^{ w.alpha = 0; }];
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2*NSEC_PER_SEC), dispatch_get_main_queue(), ^{ w.alpha = 1; });
+//        break;
+//    }
+//}
 
-#pragma mark - exchange rate
+// MARK: - exchange rate
 
 - (double)localCurrencyPrice {
     return self.localBitcoinPrice.doubleValue  * self.bitcoinGroestlPrice;
@@ -928,7 +925,6 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:tickerURL]
                                 cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 
-    [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
     NSLog(@"%@", req.URL.absoluteString);
     
     [[[NSURLSession sharedSession] dataTaskWithRequest:req
@@ -994,12 +990,12 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     }] resume];
 }
 
+
 - (void)updateGroestlExchangeRate
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateGroestlExchangeRate) object:nil];
     [self performSelector:@selector(updateGroestlExchangeRate) withObject:nil afterDelay:60.0];
     if (self.reachability.currentReachabilityStatus == NotReachable) return;
-    
     
     NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:POLONIEX_TICKER_URL]
                                          cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
@@ -1049,7 +1045,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
     }];
 }
 
-#pragma mark - query unspent outputs
+// MARK: - query unspent outputs
 
 // queries api.breadwallet.com and calls the completion block with unspent outputs for the given addresses
 - (void)utxosForAddresses:(NSArray *)addresses
@@ -1085,8 +1081,10 @@ completion:(void (^)(NSArray *utxos, NSArray *amounts, NSArray *scripts, NSError
     if ([unspentURL isEqualToString:UNSPENT_INSIGHT_URL]) {
         [args addObject:[@"addrs=" stringByAppendingString:[[addresses componentsJoinedByString:@","]
                                                         stringByAddingPercentEncodingWithAllowedCharacters:charset]]];
+
     }
-    [req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
+    [req setValue:[NSString stringWithFormat:@"/groestlwallet:%@/",\
+                   NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]] forHTTPHeaderField:@"User-Agent"];
     req.HTTPMethod = @"POST";
     req.HTTPBody = [[args componentsJoinedByString:@"&"] dataUsingEncoding:NSUTF8StringEncoding];
     NSLog(@"%@ POST: %@", req.URL.absoluteString,
@@ -1256,7 +1254,7 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
     }];
 }
 
-#pragma mark - string helpers
+// MARK: - string helpers
 
 - (int64_t)amountForString:(NSString *)string
 {
@@ -1319,7 +1317,7 @@ completion:(void (^)(BRTransaction *tx, uint64_t fee, NSError *error))completion
     return [self.localFormat stringFromNumber:n];
 }
 
-#pragma mark - UITextFieldDelegate
+// MARK: - UITextFieldDelegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string
@@ -1342,7 +1340,7 @@ replacementString:(NSString *)string
         CGPointMake([UIScreen mainScreen].bounds.size.width/2.0, [UIScreen mainScreen].bounds.size.height/2.0 - 108.0);
 }
 
-#pragma mark - UITextViewDelegate
+// MARK: - UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView
 {
@@ -1377,7 +1375,7 @@ replacementString:(NSString *)string
         CGPointMake([UIScreen mainScreen].bounds.size.width/2.0, [UIScreen mainScreen].bounds.size.height/2.0 - 108.0);
 }
 
-#pragma mark - UIAlertViewDelegate
+// MARK: - UIAlertViewDelegate
 
 - (void)didPresentAlertView:(UIAlertView *)alertView
 {
@@ -1389,7 +1387,7 @@ replacementString:(NSString *)string
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:alertView];
     if (alertView == self.alertView) self.alertView = nil;
-    if (_pinField.isFirstResponder) [self hideKeyboard];
+//    if (_pinField.isFirstResponder) [self hideKeyboard];
     _pinField = nil;
 
     if (buttonIndex == alertView.cancelButtonIndex) {
