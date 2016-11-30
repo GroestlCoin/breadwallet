@@ -489,7 +489,6 @@ _switch_cell:
      withString:[NSString stringWithFormat:@"%@ - %@",
                  NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"],
                  NSBundle.mainBundle.infoDictionary[@"CFBundleVersion"]]];
-    [s replaceCharactersInRange:[s.string rangeOfString:@"%net%"] withString:@""];
     l.attributedText = s;
     [l.superview.gestureRecognizers.firstObject addTarget:self action:@selector(about:)];
 #if DEBUG

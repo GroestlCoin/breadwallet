@@ -10,8 +10,8 @@
 /* Class = "UILabel"; text = "start/recover another wallet"; ObjectID = "D1b-HB-lKH"; */
 "D1b-HB-lKH.text" = "créer/récupérer un autre portefeuille";
 
-/* Class = "UILabel"; text = "exchange rate data provided by\nPoloniex"; ObjectID = "D4H-hd-LsX"; */
-"D4H-hd-LsX.text" = "données de taux de change fournies par";
+/* Class = "UILabel"; text = "exchange rate data provided by\nBitpay"; ObjectID = "D4H-hd-LsX"; */
+"D4H-hd-LsX.text" = "données de taux de change fournies par \nBitpay";
 
 /* Class = "UILabel"; text = "if you ever lose your phone, you will need this phrase to recover your wallet"; ObjectID = "EQG-Km-ZKY"; */
 "EQG-Km-ZKY.text" = "si jamais vous perdez votre téléphone, vous aurez besoin de cette phrase pour récupérer votre portefeuille";
