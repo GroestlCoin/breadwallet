@@ -820,7 +820,7 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 - (uint64_t)spendingLimit
 {
     // it's ok to store this in userdefaults because increasing the value only takes effect after successful pin entry
-    if (! [[NSUserDefaults standardUserDefaults] objectForKey:SPEND_LIMIT_AMOUNT_KEY]) return SATOSHIS;
+    if (! [[NSUserDefaults standardUserDefaults] objectForKey:SPEND_LIMIT_AMOUNT_KEY]) return 0;
     
     return [[NSUserDefaults standardUserDefaults] doubleForKey:SPEND_LIMIT_AMOUNT_KEY];
 }

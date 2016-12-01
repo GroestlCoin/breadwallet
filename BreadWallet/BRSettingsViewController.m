@@ -250,8 +250,8 @@
         self.selectorType = 1;
         self.selectorOptions =
             @[NSLocalizedString(@"always require passcode", nil),
-              [NSString stringWithFormat:@"%@      (%@)", [manager stringForAmount:SATOSHIS*1000],
-               [manager localCurrencyStringForAmount:SATOSHIS*1000]],
+              [NSString stringWithFormat:@"%@      (%@)", [manager stringForAmount:SATOSHIS*5000],
+               [manager localCurrencyStringForAmount:SATOSHIS*5000]],
               [NSString stringWithFormat:@"%@   (%@)", [manager stringForAmount:SATOSHIS*10000],
                [manager localCurrencyStringForAmount:SATOSHIS*10000]],
               [NSString stringWithFormat:@"%@ (%@)", [manager stringForAmount:SATOSHIS*100000],
@@ -587,7 +587,7 @@ _switch_cell:
                 manager.localCurrencyCode = manager.currencyCodes[indexPath.row];
             }
         }
-        else manager.spendingLimit = (indexPath.row > 0) ? pow(10, indexPath.row + 10) : 0;
+        else manager.spendingLimit = (indexPath.row == 1)? 5*pow(10,11) : ((indexPath.row > 0) ? pow(10, indexPath.row + 10) : 0);
         
         if (currencyCodeIndex < self.selectorOptions.count && currencyCodeIndex != indexPath.row) {
             [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:currencyCodeIndex inSection:0], indexPath]

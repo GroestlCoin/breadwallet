@@ -103,11 +103,6 @@
 	<string>We will use your location to determine where you are. Your location will never be recorded or shared with anyone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Unused</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
 	<key>UIMainStoryboardFile</key>
