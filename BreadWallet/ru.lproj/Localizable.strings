@@ -92,7 +92,7 @@
 "Groestlcoin address" = "Биткойн-адрес";
 
 /* No comment provided by engineer. */
-"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Адреса Groestlcoin также могут быть скопированы в буфер обмена. Groestlcoin-адрес всегда начинается с «1» или «3».";
+"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Адреса Groestlcoin также могут быть скопированы в буфер обмена. Groestlcoin-адрес всегда начинается с «F» или «3».";
 
 /* No comment provided by engineer. */
 "groestlcoin network fee" = "комиссия сети groestlcoin";

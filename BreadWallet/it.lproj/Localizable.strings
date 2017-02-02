@@ -83,7 +83,7 @@
 "Groestlcoin address" = "Indirizzo Groestlcoin";
 
 /* No comment provided by engineer. */
-"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Gli indirizzi Groestlcoin possono anche essere copiati negli Appunti. Un indirizzo groestlcoin inizia sempre con '1' o '3'.";
+"Groestlcoin addresses can also be copied to the clipboard. A groestlcoin address always starts with 'N'." = "Gli indirizzi Groestlcoin possono anche essere copiati negli Appunti. Un indirizzo groestlcoin inizia sempre con 'F' o '3'.";
 
 /* No comment provided by engineer. */
 "groestlcoin network fee" = "tassa di rete groestlcoin";
