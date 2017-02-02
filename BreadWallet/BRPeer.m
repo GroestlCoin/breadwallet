@@ -375,8 +375,8 @@ services:(uint64_t)services
     }
     
     [msg appendBytes:&hashStop length:sizeof(hashStop)];
-    NSLog(@"%@:%u calling getheaders with locators: %@", self.host, self.port,
-          @[locators.firstObject, locators.lastObject]);
+    //NSLog(@"%@:%u calling getheaders with locators: %@", self.host, self.port,
+    //      @[locators.firstObject, locators.lastObject]);
     if (self.relayStartTime == 0) self.relayStartTime = [NSDate timeIntervalSinceReferenceDate];
     [self sendMessage:msg type:MSG_GETHEADERS];
 }

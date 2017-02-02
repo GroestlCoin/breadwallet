@@ -2014,7 +2014,7 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
     
     if (uint256_eq(block.prevBlock, self.lastBlock.blockHash)) { // new block extends main chain
         if ((block.height % 500) == 0 || txHashes.count > 0 || block.height > peer.lastblock) {
-            NSLog(@"adding block at height: %d, false positive rate: %f", block.height, self.fpRate);
+            //NSLog(@"adding block at height: %d, false positive rate: %f", block.height, self.fpRate);
         }
         
         self.blocks[blockHash] = block;
