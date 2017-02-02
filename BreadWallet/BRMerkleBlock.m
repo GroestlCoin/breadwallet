@@ -377,6 +377,9 @@ UInt256 multiplyThis32 (UInt256 a,uint32_t b)
 {
     uint32_t darkGravityWaveTarget = [self darkGravityWaveTargetWithPreviousBlocks:previousBlocks];
     int32_t diff = self.target - darkGravityWaveTarget;
+    if (abs(diff) > 1) {
+        NSLog(@"problem at block %d",[self height]);
+    }
     return (abs(diff) < 2); //the core client has is less precise with a rounding error that can sometimes cause a problem. We are very rarely 1 off
 }
 
@@ -384,7 +387,7 @@ UInt256 multiplyThis32 (UInt256 a,uint32_t b)
     /* current difficulty formula, darkcoin - based on DarkGravity v3, original work done by evan duffield, modified for iOS */
     BRMerkleBlock *previousBlock = previousBlocks[uint256_obj(self.prevBlock)];
     
-    uint32_t nActualTimespan = 0;
+    int32_t nActualTimespan = 0;
     int64_t lastBlockTime = 0;
     uint32_t blockCount = 0;
     UInt256 sumTargets = UINT256_ZERO;
@@ -394,7 +397,6 @@ UInt256 multiplyThis32 (UInt256 a,uint32_t b)
         // Return minimal required work. (1e0ffff0)
         return MAX_PROOF_OF_WORK;
     }
-    
     BRMerkleBlock *currentBlock = previousBlock;
     // loop over the past n blocks, where n == PastBlocksMax
     for (blockCount = 1; currentBlock && currentBlock.height > 0 && blockCount<=DGW_PAST_BLOCKS_MAX; blockCount++) {
@@ -415,9 +417,11 @@ UInt256 multiplyThis32 (UInt256 a,uint32_t b)
         if(lastBlockTime > 0){
             // Calculate time difference between previous block and current block
             int64_t currentBlockTime = currentBlock.timestamp;
+            //if (lastBlockTime > currentBlockTime) {
             int64_t diff = ((lastBlockTime) - (currentBlockTime));
-            // Increment the actual timespan
-            nActualTimespan += diff;
+
+                nActualTimespan += diff;
+
         }
         // Set lastBlockTime to the block time for the block in current iteration
         lastBlockTime = currentBlock.timestamp;
@@ -427,6 +431,7 @@ UInt256 multiplyThis32 (UInt256 a,uint32_t b)
     }
     UInt256 blockCount256 = ((UInt256) { .u64 = { blockCount, 0, 0, 0 } });
     // darkTarget is the difficulty
+
     UInt256 darkTarget = divide(sumTargets,blockCount256);
     
     // nTargetTimespan is the time that the CountBlocks should have taken to be generated.
