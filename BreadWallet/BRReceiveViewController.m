@@ -312,7 +312,7 @@
         if ([MFMailComposeViewController canSendMail]) {
             MFMailComposeViewController *composeController = [MFMailComposeViewController new];
             
-            composeController.subject = NSLocalizedString(@"Bitcoin address", nil);
+            composeController.subject = NSLocalizedString(@"Groestlcoin address", nil);
             [composeController setMessageBody:self.paymentRequest.string isHTML:NO];
             [composeController addAttachmentData:UIImagePNGRepresentation(self.qrView.image) mimeType:@"image/png"
              fileName:@"qr.png"];
@@ -334,7 +334,7 @@
             MFMessageComposeViewController *composeController = [MFMessageComposeViewController new];
 
             if ([MFMessageComposeViewController canSendSubject]) {
-                composeController.subject = NSLocalizedString(@"Bitcoin address", nil);
+                composeController.subject = NSLocalizedString(@"Groestlcoin address", nil);
             }
             
             composeController.body = self.paymentRequest.string;
