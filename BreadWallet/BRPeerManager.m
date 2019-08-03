@@ -1327,9 +1327,9 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
         UInt256 h;
         
         [hash getValue:&h];
-        txm = [[BRTxMetadataObject alloc] initWithTxHash:h store:[BRAPIClient sharedClient].kv];
-        txm.blockHeight = height;
-        if (txm) [[BRAPIClient sharedClient].kv set:txm error:&kvErr];
+//        txm = [[BRTxMetadataObject alloc] initWithTxHash:h store:[BRAPIClient sharedClient].kv];
+//        txm.blockHeight = height;
+//        if (txm) [[BRAPIClient sharedClient].kv set:txm error:&kvErr];
     }
 }
 
@@ -1809,10 +1809,10 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
             [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerTxStatusNotification object:nil];
             if (callback) callback(nil);
             
-            [[BRAPIClient sharedClient].kv
-             set:[[BRTxMetadataObject alloc] initWithTransaction:transaction exchangeRate:manager.localCurrencyPrice
-                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
-                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
+//            [[BRAPIClient sharedClient].kv
+//             set:[[BRTxMetadataObject alloc] initWithTransaction:transaction exchangeRate:manager.localCurrencyPrice
+//                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
+//                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
         });
     }
     
@@ -1870,10 +1870,10 @@ static const struct { uint32_t height; const char *hash; uint32_t timestamp; uin
             [[NSNotificationCenter defaultCenter] postNotificationName:BRPeerManagerTxStatusNotification object:nil];
             if (callback) callback(nil);
 
-            [[BRAPIClient sharedClient].kv
-             set:[[BRTxMetadataObject alloc] initWithTransaction:tx exchangeRate:manager.localCurrencyPrice
-                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
-                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
+//            [[BRAPIClient sharedClient].kv
+//             set:[[BRTxMetadataObject alloc] initWithTransaction:tx exchangeRate:manager.localCurrencyPrice
+//                  exchangeRateCurrency:manager.localCurrencyCode feeRate:manager.wallet.feePerKb
+//                  deviceId:[BRAPIClient sharedClient].deviceId] error:&kvErr];
         });
     }
     

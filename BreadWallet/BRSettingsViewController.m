@@ -33,6 +33,7 @@
 #import "breadwallet-Swift.h"
 #include <WebKit/WebKit.h>
 #include <asl.h>
+#import <sys/utsname.h>
 
 @interface BRSettingsViewController ()
 
@@ -92,7 +93,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.eaController preload];
 
 }
 
@@ -114,24 +114,6 @@
 {
     if (self.balanceObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.balanceObserver];
     if (self.txStatusObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.txStatusObserver];
-
-}
-
-- (BRWebViewController *)eaController {
-    if (_eaController) {
-        return _eaController;
-    }
-    // only available on iOS 8 and above
-    if ([WKWebView class] && [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsEarlyAccess]) {
-#if DEBUG
-        _eaController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy-staging" mountPoint:@"/ea"];
-        //        self.eaController.debugEndpoint = @"http://localhost:8080";
-#else
-        _eaController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy" mountPoint:@"/ea"];
-#endif
-        [_eaController startServer];
-    }
-    return _eaController;
 
 }
 
@@ -396,11 +378,6 @@ _switch_cell:
             cell = [tableView dequeueReusableCellWithIdentifier:actionIdent];
             cell.textLabel.text = @"early access";
 
-            if (![WKWebView class] || ![[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsEarlyAccess]) {
-                cell = [[UITableViewCell alloc] initWithFrame:CGRectZero];
-                cell.userInteractionEnabled = NO;
-                cell.hidden = YES;
-            }
 
             break;
     }
