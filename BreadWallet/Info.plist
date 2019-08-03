@@ -2,11 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-		<string>fetch</string>
-	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -14,6 +9,8 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
@@ -24,6 +21,8 @@
 			</array>
 		</dict>
 		<dict>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
@@ -34,6 +33,8 @@
 			</array>
 		</dict>
 		<dict>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>CFBundleTypeIconFiles</key>
 			<array/>
 			<key>CFBundleTypeName</key>
@@ -55,7 +56,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.6</string>
+	<string>0.7.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -80,19 +81,9 @@
 				<string>bread</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>bitid</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bitid</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0</string>
+	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -108,6 +99,11 @@
 	<string>We will use your location to determine where you are. Your location will never be recorded or shared with anyone.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Unused</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
 	<key>UIMainStoryboardFile</key>
@@ -173,6 +169,16 @@
 				<string>application/groestlcoin-paymentack</string>
 			</dict>
 		</dict>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to authorize payments</string>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>dashcontrol</string>
 	</array>
 </dict>
 </plist>
