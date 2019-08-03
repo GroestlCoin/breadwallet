@@ -653,11 +653,11 @@ size_t chacha20Poly1305AEADDecrypt(void *out, size_t outLen, const void *key32, 
 
 //this is a groestl 512, but only the first 32 bytes are used
 - (UInt256)GROESTL {
-    return [self groestl512_32Bits];
+    return *(UInt256*)(uint8_t*)[self groestl512].u8;
 }
 
 - (UInt256)GROESTL_2 {
-    return [self groestl512_2_32Bits];
+    return *(UInt256*)(uint8_t*)[self groestl512_2].u8;
 }
 
 - (UInt160)RMD160

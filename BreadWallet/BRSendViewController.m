@@ -206,8 +206,6 @@ static NSString *sanitizeString(NSString *s)
     }
     else if ([url.scheme isEqual:@"groestlcoin"]) {
         [self confirmRequest:[BRPaymentRequest requestWithURL:url]];
-    } else if ([BRBitID isBitIDURL:url]) {
-        [self handleBitIDURL:url];
     }
     else {
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"unsupported url", nil) message:url.absoluteString
@@ -267,70 +265,6 @@ static NSString *sanitizeString(NSString *s)
       delegate:nil cancelButtonTitle:NSLocalizedString(@"ok", nil) otherButtonTitles:nil] show];
 }
 
-- (void)handleBitIDURL:(NSURL *)url
-{
-    if ([UIAlertController class] == nil) {
-        return;
-    }
-    BRBitID *bitid = [[BRBitID alloc] initWithUrl:url];
-    
-    void (^actionHandler)(UIAlertAction * _Nonnull) = ^(UIAlertAction * _Nonnull action) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-        if (action.style == UIAlertActionStyleDefault) {
-            BRActivityViewController *activityVC = [[BRActivityViewController alloc] initWithMessage:
-                                                    NSLocalizedString(@"Signing...", nil)];
-            void (^callbackHandler)(id, id, id) = ^(NSData *data, NSURLResponse *resp, NSError *error) {
-                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-                NSHTTPURLResponse *httpResp = (NSHTTPURLResponse *)resp;
-                if (error == nil && (httpResp.statusCode >= 200 && httpResp.statusCode < 300)) {
-                    // successfully sent bitid callback request. show a brief success message
-                    UIAlertController *successAlert =
-                    [UIAlertController alertControllerWithTitle:@"Successfully Authenticated" message:nil
-                                                 preferredStyle:UIAlertControllerStyleAlert];
-                    [self.navigationController presentViewController:successAlert animated:YES completion:nil];
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)),
-                                   dispatch_get_main_queue(), ^{
-                                       [self dismissViewControllerAnimated:YES completion:nil];
-                                   });
-                } else {
-                    // show the user an error alert
-                    UIAlertController *errorAlert =
-                    [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Authentication Error", nil)
-                                                        message:NSLocalizedString(@"Please check with the service. "
-                                                                                  "You may need to try again.", nil)
-                                                 preferredStyle:UIAlertControllerStyleAlert];
-                    [errorAlert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                                   style:UIAlertActionStyleCancel
-                                                                 handler:^(UIAlertAction * _Nonnull action) {
-                                                                     [self dismissViewControllerAnimated:YES
-                                                                                              completion:nil];
-                                                                 }]];
-                    [self.navigationController presentViewController:errorAlert animated:YES completion:nil];
-                }
-            };
-            // attempt to avoid frozen pin input bug 
-            CFRunLoopPerformBlock([[NSRunLoop mainRunLoop] getCFRunLoop], kCFRunLoopCommonModes, ^{
-                [bitid runCallback:callbackHandler];
-                [self.navigationController presentViewController:activityVC animated:YES completion:nil];
-            });
-        }
-    };
-    
-    NSString *message = [NSString stringWithFormat:
-
-                         NSLocalizedString(@"%@ is requesting authentication using your groestlcoin wallet.", nil),
-                         bitid.siteName];
-    UIAlertController *alertController =
-        [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BitID Authentication Request", nil)
-                                            message:message preferredStyle:UIAlertControllerStyleAlert];
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Deny", nil)
-                                                        style:UIAlertActionStyleCancel
-                                                      handler:actionHandler]];
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Approve", nil)
-                                                        style:UIAlertActionStyleDefault
-                                                      handler:actionHandler]];
-    [self.navigationController presentViewController:alertController animated:YES completion:nil];
-}
 
 
 // generate a description of a transaction so the user can review and decide whether to confirm or cancel
@@ -1030,11 +964,10 @@ fromConnection:(AVCaptureConnection *)connection
                           [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         BRPaymentRequest *request = [BRPaymentRequest requestWithString:addr];
 
-        if (request.url && [BRBitID isBitIDURL:request.url]) {
+        if (request.url) {
 
             [self.scanController stop];
             [self.navigationController dismissViewControllerAnimated:YES completion:^{
-                [self handleBitIDURL:request.url];
                 [self resetQRGuide];
             }];
 

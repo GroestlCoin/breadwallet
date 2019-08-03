@@ -92,6 +92,9 @@
 
     //TODO: implement importing of private keys split with shamir's secret sharing:
     //      https://github.com/cetuscetus/btctool/blob/bip/bip-xxxx.mediawiki
+    
+    
+    [BRWalletManager sharedInstance];
 
     [BRPhoneWCSessionManager sharedInstance];
     
@@ -105,17 +108,16 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.balance == UINT64_MAX) self.balance = [BRWalletManager sharedInstance].wallet.balance;
-        [self updatePlatform];
         [self registerForPushNotifications];
     });
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    BRAPIClient *client = [BRAPIClient sharedClient];
-    [client.kv sync:^(NSError *err) {
-        NSLog(@"Finished syncing. err=%@", err);
-    }];
+//    BRAPIClient *client = [BRAPIClient sharedClient];
+//    [client.kv sync:^(NSError *err) {
+//        NSLog(@"Finished syncing. err=%@", err);
+//    }];
 }
 
 // Applications may reject specific types of extensions based on the extension point identifier.
@@ -255,50 +257,6 @@ performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionH
     }
 }
 
-- (void)updatePlatform {
-    if ([WKWebView class]) { // platform features are only available on iOS 8.0+
-        BRAPIClient *client = [BRAPIClient sharedClient];
-        
-        // set up bundles
-#if DEBUG
-        NSArray *bundles = @[@"bread-buy-staging"];
-#else
-        NSArray *bundles = @[@"bread-buy"];
-#endif
-        [bundles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [client updateBundle:(NSString *)obj handler:^(NSString * _Nullable error) {
-                if (error != nil) {
-                    NSLog(@"error updating bundle %@: %@", obj, error);
-                } else {
-                    NSLog(@"successfully updated bundle %@", obj);
-                }
-            }];
-        }];
-        
-        // set up feature flags
-        [client updateFeatureFlags];
-        
-        // set up the kv store
-        BRKVStoreObject *obj;
-        NSError *kvErr = nil;
-        // store a sentinel so we can be sure the kv store replication is functioning properly
-        obj = [client.kv get:@"sentinel" error:&kvErr];
-        if (kvErr != nil) {
-            NSLog(@"Error getting sentinel, trying again. err=%@", kvErr);
-            obj = [[BRKVStoreObject alloc] initWithKey:@"sentinel" version:0 lastModified:[NSDate date]
-                                               deleted:false data:[NSData data]];
-        }
-        [client.kv set:obj error:&kvErr];
-        if (kvErr != nil) {
-            NSLog(@"Error setting kv object err=%@", kvErr);
-        }
-        
-        [client.kv sync:^(NSError * _Nullable err) {
-            NSLog(@"Finished syncing: error=%@", err);
-        }];
-    }
-}
-
 - (void)registerForPushNotifications {
     BOOL hasNotification = [UIUserNotificationSettings class] != nil;
     NSString *userDefaultsKey = @"has_asked_for_push";
@@ -341,8 +299,7 @@ performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionH
 #endif
     
     NSLog(@"Push registry did update push credentials: %@", credentials);
-    BRAPIClient *client = [BRAPIClient sharedClient];
-    [client savePushNotificationToken:credentials.token pushNotificationType:svcType];
+
 }
 
 - (void)pushRegistry:(PKPushRegistry *)registry didInvalidatePushTokenForType:(NSString *)type

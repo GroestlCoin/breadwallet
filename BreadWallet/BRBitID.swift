@@ -37,7 +37,7 @@ import Security
         return url.scheme == SCHEME
     }
     
-    open static let BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n".data(using: String.Encoding.utf8)!
+    public static let BITCOIN_SIGNED_MESSAGE_HEADER = "Bitcoin Signed Message:\n".data(using: String.Encoding.utf8)!
     
     open class func formatMessageForBitcoinSigning(_ message: String) -> Data {
         let data = NSMutableData()
@@ -56,7 +56,7 @@ import Security
         return String(bytes: signature.base64EncodedData(options: []), encoding: String.Encoding.utf8) ?? ""
     }
     
-    open let url: URL
+    public let url: URL
     
     open var siteName: String {
         return "\(url.host!)\(url.path)"

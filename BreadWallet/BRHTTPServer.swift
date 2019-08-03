@@ -179,7 +179,7 @@ enum BRHTTPServerError: Error {
             self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
-    func suspend(_: Notification) {
+    @objc func suspend(_: Notification) {
         if isStarted {
             shutdownServer()
             print("[BRHTTPServer] suspended")
@@ -188,7 +188,7 @@ enum BRHTTPServerError: Error {
         }
     }
     
-    func resume(_: Notification) {
+    @objc func resume(_: Notification) {
         if !isStarted {
             do {
                 try listenServer(port)
@@ -453,8 +453,8 @@ enum BRHTTPServerError: Error {
             , match.numberOfRanges == 3 else {
                 throw BRHTTPServerError.invalidRangeHeader
         }
-        let startStr = (rngHeader as NSString).substring(with: match.rangeAt(1))
-        let endStr = (rngHeader as NSString).substring(with: match.rangeAt(2))
+        let startStr = (rngHeader as NSString).substring(with: match.range(at: 1))
+        let endStr = (rngHeader as NSString).substring(with: match.range(at: 2))
         guard let start = Int(startStr), let end = Int(endStr) else {
             throw BRHTTPServerError.invalidRangeHeader
         }

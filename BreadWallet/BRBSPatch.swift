@@ -147,10 +147,10 @@ class BRBSPatch {
         }
         let old = (oldData as NSData).bytes.bindMemory(to: CUnsignedChar.self, capacity: oldData.count)
         let oldSize = off_t(oldData.count)
-        var oldPos: off_t = 0, newPos: off_t = 0
+        var oldPos: Int = 0, newPos: Int = 0
         let new = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: Int(newSize) + 1)
         let buf = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: 8)
-        var crtl = Array<off_t>(repeating: 0, count: 3)
+        var crtl = Array<Int>(repeating: 0, count: 3)
         while newPos < newSize {
             // read control data
             for i in 0...2 {
@@ -159,7 +159,7 @@ class BRBSPatch {
                     log("unable to read control data \(lenread) \(cbz2err.pointee)")
                     throw BRBSPatchError.corruptPatch
                 }
-                crtl[i] = offtin(UnsafePointer<CUnsignedChar>(buf))
+                crtl[i] = Int(offtin(UnsafePointer<CUnsignedChar>(buf)))
             }
             // sanity check
             if (newPos + crtl[0]) > newSize {

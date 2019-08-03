@@ -211,7 +211,6 @@ static NSString *dateFormat(NSString *template)
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self.buyController preload];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -255,23 +254,6 @@ static NSString *dateFormat(NSString *template)
     if (self.syncStartedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncStartedObserver];
     if (self.syncFinishedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncFinishedObserver];
     if (self.syncFailedObserver) [[NSNotificationCenter defaultCenter] removeObserver:self.syncFailedObserver];
-}
-
-- (BRWebViewController *)buyController {
-    if (_buyController) {
-        return _buyController;
-    }
-    if ([WKWebView class] && [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin]) { // only available on iOS 8 and above
-#if DEBUG
-        _buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy-staging" mountPoint:@"/buy"];
-        //        self.buyController.debugEndpoint = @"http://localhost:8080";
-#else
-        _buyController = [[BRWebViewController alloc] initWithBundleName:@"bread-buy" mountPoint:@"/buy"];
-#endif
-        [_buyController startServer];
-        [_buyController preload];
-    }
-    return _buyController;
 }
 
 - (uint32_t)blockHeight
@@ -446,7 +428,7 @@ static NSString *dateFormat(NSString *template)
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    bool buyEnabled = [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin];
+    bool buyEnabled = NO;
     switch (section) {
         case 0:
             if (self.transactions.count == 0) return 1;
@@ -578,7 +560,7 @@ static NSString *dateFormat(NSString *template)
 
         case 1:
             cell = [tableView dequeueReusableCellWithIdentifier:actionIdent];
-            bool buyEnabled = [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin];
+            bool buyEnabled = NO;
             long adjustedRow = !buyEnabled ? indexPath.row + 1 : indexPath.row;
             switch (adjustedRow) {
                 case 0:
@@ -701,7 +683,7 @@ static NSString *dateFormat(NSString *template)
 
         case 1:
         {
-            bool buyEnabled = [[BRAPIClient sharedClient] featureEnabled:BRFeatureFlagsBuyBitcoin];
+            bool buyEnabled = NO;
             long adjustedRow = !buyEnabled ? indexPath.row + 1 : indexPath.row;
             switch (adjustedRow) {
                 case 0: // buy bitcoin
