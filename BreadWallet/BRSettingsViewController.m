@@ -564,7 +564,7 @@ _switch_cell:
                 manager.localCurrencyCode = manager.currencyCodes[indexPath.row];
             }
         }
-        else manager.spendingLimit = (indexPath.row == 1)? 5*pow(10,11) : ((indexPath.row > 0) ? pow(10, indexPath.row + 10) : 0);
+        else manager.spendingLimit = ((indexPath.row > 0) ? pow(10, indexPath.row + 8) : 0);
         
         if (currencyCodeIndex < self.selectorOptions.count && currencyCodeIndex != indexPath.row) {
             [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:currencyCodeIndex inSection:0], indexPath]
