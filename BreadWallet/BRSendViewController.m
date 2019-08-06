@@ -39,6 +39,8 @@
 #import "NSMutableData+Bitcoin.h"
 #import "NSData+Bitcoin.h"
 #import "BREventManager.h"
+#import "DWQRScanViewController.h"
+#import "DWQRScanViewModel.h"
 #import "breadwallet-Swift.h"
 
 #define SCAN_TIP      NSLocalizedString(@"Scan someone else's QR code to get their groestlcoin address. "\
@@ -58,7 +60,7 @@ static NSString *sanitizeString(NSString *s)
     return sane;
 }
 
-@interface BRSendViewController ()
+@interface BRSendViewController () <DWQRScanViewModelDelegate>
 
 @property (nonatomic, assign) BOOL clearClipboard, useClipboard, showTips, showBalance, canChangeAmount;
 @property (nonatomic, strong) BRTransaction *sweepTx;
@@ -877,9 +879,9 @@ memo:(NSString *)memo isSecure:(BOOL)isSecure
     [BREventManager saveEvent:@"send:scan_qr"];
     if (! [sender isEqual:self.scanButton]) self.showBalance = YES;
     [sender setEnabled:NO];
-    self.scanController.delegate = self;
-    self.scanController.transitioningDelegate = self;
-    [self.navigationController presentViewController:self.scanController animated:YES completion:nil];
+    DWQRScanViewController *qrScanViewController = [[DWQRScanViewController alloc] init];
+    qrScanViewController.viewModel.delegate = self;
+    [self presentViewController:qrScanViewController animated:YES completion:nil];
 }
 
 - (IBAction)payToClipboard:(id)sender
@@ -1221,6 +1223,67 @@ presentingController:(UIViewController *)presenting sourceController:(UIViewCont
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
 {
     return self;
+}
+
+// MARK: - DWQRScanViewModelDelegate
+
+- (void)qrScanViewModel:(DWQRScanViewModel *)viewModel didScanStandardNonPaymentRequest:(BRPaymentRequest *)request {
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (request.amount > 0) self.canChangeAmount = YES;
+        if (request.isValid && self.showBalance) {
+            [self showBalance:request.paymentAddress];
+            [self cancel:nil];
+        }
+        else {
+            [self confirmRequest:request];
+        }
+    }];
+}
+
+- (void)qrScanViewModel:(DWQRScanViewModel *)viewModel
+  didScanPaymentRequest:(BRPaymentRequest *)request
+        protocolRequest:(BRPaymentProtocolRequest *)protocolRequest
+                  error:(NSError *_Nullable)error {
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (error) {
+            request.r = nil;
+        }
+        
+        if (error && !request.isValid) {
+            UIAlertController *alert = [UIAlertController
+                                        alertControllerWithTitle:NSLocalizedString(@"couldn't make payment", nil)
+                                        message:error.localizedDescription
+                                        preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* okButton = [UIAlertAction
+                                       actionWithTitle:NSLocalizedString(@"ok", nil)
+                                       style:UIAlertActionStyleCancel
+                                       handler:nil];
+            [alert addAction:okButton];
+            [self presentViewController:alert animated:YES completion:nil];
+            
+            [BREventManager saveEvent:@"send:cancel"];
+        }
+        
+        if (error) {
+            [BREventManager saveEvent:@"send:unsuccessful_qr_payment_protocol_fetch"];
+            [self confirmRequest:request]; // payment protocol fetch failed, so use standard request
+        }
+        else {
+            [BREventManager saveEvent:@"send:successful_qr_payment_protocol_fetch"];
+            [self confirmProtocolRequest:protocolRequest];
+        }
+    }];
+}
+
+- (void)qrScanViewModel:(DWQRScanViewModel *)viewModel didScanBIP73PaymentProtocolRequest:(BRPaymentProtocolRequest *)protocolRequest {
+    [self dismissViewControllerAnimated:YES completion:^{
+        [BREventManager saveEvent:@"send:successful_bip73"];
+        [self confirmProtocolRequest:protocolRequest];
+    }];
+}
+
+- (void)qrScanViewModelDidCancel:(DWQRScanViewModel *)viewModel {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
