@@ -309,23 +309,14 @@ static NSTimeInterval const kResumeSearchTimeInterval = 1.0;
                              }
                              else {
                                  NSString *errorMessage = nil;
-                                 if (([request.scheme isEqual:@"dash"] && request.paymentAddress.length > 1) ||
-                                     [request.paymentAddress hasPrefix:@"X"] || [request.paymentAddress hasPrefix:@"7"]) {
+                                 if (([request.scheme isEqual:@"groestlcoin"] && request.paymentAddress.length > 1) ||
+                                     [request.paymentAddress hasPrefix:@"F"] || [request.paymentAddress hasPrefix:@"3"]) {
                                      errorMessage = [NSString stringWithFormat:@"%@:\n%@",
-                                                     NSLocalizedString(@"not a valid dash address", nil),
+                                                     NSLocalizedString(@"not a valid groestlcoin address", nil),
                                                      request.paymentAddress];
-                                     //disabled for now --shapeshift
-                                     //                                 } else if (([request.scheme isEqual:@"bitcoin"] && request.paymentAddress.length > 1) ||
-                                     //                                            [request.paymentAddress hasPrefix:@"1"] || [request.paymentAddress hasPrefix:@"3"]) {
-                                     //                                     errorMessage = [NSString stringWithFormat:@"%@:\n%@",
-                                     //                                                     NSLocalizedString(@"not a valid bitcoin address", nil),
-                                     //                                                     request.paymentAddress];
                                  }
                                  else {
-                                     if (FALSE) {
-                                         errorMessage = NSLocalizedString(@"not a dash or bitcoin QR code", nil); //this is kept here on purpose to keep the string in our localization script
-                                     }
-                                     errorMessage = NSLocalizedString(@"not a dash QR code", nil);
+                                     errorMessage = NSLocalizedString(@"not a groestlcoin QR code", nil);
                                  }
                                  [strongSelf.qrCodeObject setInvalidWithErrorMessage:errorMessage];
                                  
