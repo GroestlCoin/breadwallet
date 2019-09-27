@@ -49,7 +49,7 @@ class Snapshot: NSObject {
         
         do {
             let locale = try NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String
-            deviceLanguage = locale.substring(to: locale.characters.index(locale.startIndex, offsetBy: 2, limitedBy:locale.endIndex)!)
+            deviceLanguage = locale.substring(to: locale.index(locale.startIndex, offsetBy: 2, limitedBy:locale.endIndex)!)
             app.launchArguments += ["-AppleLanguages", "(\(deviceLanguage))", "-AppleLocale", "\"\(locale)\"", "-ui_testing"]
         } catch {
             print("Couldn't detect/set language...")
@@ -64,7 +64,7 @@ class Snapshot: NSObject {
         do {
             let launchArguments = try NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue) as String
             let regex = try NSRegularExpression(pattern: "(\\\".+?\\\"|\\S+)", options: [])
-            let matches = regex.matches(in: launchArguments, options: [], range: NSRange(location:0, length:launchArguments.characters.count))
+            let matches = regex.matches(in: launchArguments, options: [], range: NSRange(location:0, length:launchArguments.count))
             let results = matches.map { result -> String in
                 (launchArguments as NSString).substring(with: result.range)
             }

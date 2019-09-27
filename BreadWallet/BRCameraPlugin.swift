@@ -116,7 +116,7 @@ import Foundation
     }
     
     open func imagePickerController(_ picker: UIImagePickerController,
-                                    didFinishPickingMediaWithInfo info: [String : Any]) {
+                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         defer {
             DispatchQueue.main.async {
                 picker.dismiss(animated: true, completion: nil)
@@ -125,7 +125,7 @@ import Foundation
         guard let resp = self.response else {
             return
         }
-        guard var img = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+        guard var img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             print("[BRCameraPlugin] error picking image... original image doesnt exist. data: \(info)")
             resp.provide(500)
             response = nil
@@ -174,7 +174,7 @@ import Foundation
     }
     
     func writeImage(_ image: UIImage) throws -> String {
-        guard let dat = UIImageJPEGRepresentation(image, 0.5) else {
+        guard let dat = image.jpegData(compressionQuality: 0.5) else {
             throw ImageError.errorConvertingImage
         }
         let name = (NSData(uInt256: (dat as NSData).sha256()) as NSData).base58String()
@@ -217,7 +217,7 @@ class IDCameraOverlay: UIView, CameraOverlay {
     override init(frame: CGRect) {
         overlayRect = CGRect(x: 0, y: 0, width: frame.width, height: frame.width * CGFloat(4.0/3.0))
         takePhotoButton = UIButton(type: .custom)
-        takePhotoButton.setImage(UIImage(named: "camera-btn"), for: UIControlState())
+        takePhotoButton.setImage(UIImage(named: "camera-btn"), for: UIControl.State())
         takePhotoButton.setImage(UIImage(named: "camera-btn-pressed"), for: .highlighted)
         takePhotoButton.frame = CGRect(x: 0, y: 0, width: 79, height: 79)
         takePhotoButton.center = CGPoint(
@@ -225,10 +225,10 @@ class IDCameraOverlay: UIView, CameraOverlay {
             y: overlayRect.maxX + (frame.height - overlayRect.maxX) * 0.75
         )
         cancelButton = UIButton(type: .custom)
-        cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: UIControlState())
+        cancelButton.setTitle(NSLocalizedString("Cancel", comment: ""), for: UIControl.State())
         cancelButton.frame = CGRect(x: 0, y: 0, width: 88, height: 44)
         cancelButton.center = CGPoint(x: takePhotoButton.center.x * 0.3, y: takePhotoButton.center.y)
-        cancelButton.setTitleColor(UIColor.white, for: UIControlState())
+        cancelButton.setTitleColor(UIColor.white, for: UIControl.State())
         super.init(frame: frame)
         takePhotoButton.addTarget(self, action: #selector(IDCameraOverlay.doTakePhoto(_:)),
                                   for: .touchUpInside)
@@ -275,9 +275,9 @@ class IDCameraOverlay: UIView, CameraOverlay {
         let style = NSParagraphStyle.default.mutableCopy() as! NSMutableParagraphStyle
         style.alignment = .center
         let attr = [
-            NSAttributedStringKey.paragraphStyle: style,
-            NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 17),
-            NSAttributedStringKey.foregroundColor: UIColor.white
+            NSAttributedString.Key.paragraphStyle: style,
+            NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 17),
+            NSAttributedString.Key.foregroundColor: UIColor.white
         ]
         
         str.draw(in: CGRect(x: 0, y: cutout.maxY + 14.0, width: rect.width, height: 22), withAttributes: attr)

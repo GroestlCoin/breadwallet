@@ -123,7 +123,7 @@ class BRAWBalanceInterfaceController: WKInterfaceController {
     
     func updateRow(_ rowControl: BRAWTransactionRowControl, transaction: BRAppleWatchTransactionData) {
         let localCurrencyAmount
-            = (transaction.amountTextInLocalCurrency.characters.count > 2) ? transaction.amountTextInLocalCurrency : " "
+            = (transaction.amountTextInLocalCurrency.count > 2) ? transaction.amountTextInLocalCurrency : " "
         rowControl.amountLabel.setText(transaction.amountText)
         rowControl.localCurrencyAmount.setText(localCurrencyAmount)
         rowControl.dateLabel.setText(transaction.dateText)

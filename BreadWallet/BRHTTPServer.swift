@@ -87,18 +87,18 @@ enum BRHTTPServerError: Error {
                 // backgrounding
                 NotificationCenter.default.addObserver(
                     self, selector: #selector(BRHTTPServer.suspend(_:)),
-                    name: NSNotification.Name.UIApplicationWillResignActive, object: nil
+                    name: UIApplication.willResignActiveNotification, object: nil
                 )
                 NotificationCenter.default.addObserver(
                     self, selector: #selector(BRHTTPServer.suspend(_:)),
-                    name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+                    name: UIApplication.didEnterBackgroundNotification, object: nil)
                 // foregrounding
                 NotificationCenter.default.addObserver(
                     self, selector: #selector(BRHTTPServer.resume(_:)),
-                    name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+                    name: UIApplication.willEnterForegroundNotification, object: nil)
                 NotificationCenter.default.addObserver(
                     self, selector: #selector(BRHTTPServer.resume(_:)),
-                    name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil
+                    name: UIApplication.didBecomeActiveNotification, object: nil
                 )
                 return
             } catch {
@@ -169,14 +169,14 @@ enum BRHTTPServerError: Error {
         shutdownServer()
         // background
         NotificationCenter.default.removeObserver(
-            self, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
+            self, name: UIApplication.didEnterBackgroundNotification, object: nil)
         NotificationCenter.default.removeObserver(
-            self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+            self, name: UIApplication.willResignActiveNotification, object: nil)
         // foreground
         NotificationCenter.default.removeObserver(
-            self, name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+            self, name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.removeObserver(
-            self, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+            self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     @objc func suspend(_: Notification) {
@@ -449,7 +449,7 @@ enum BRHTTPServerError: Error {
         }
         guard let rngHeader = headers["range"]?[0],
             let match = BRHTTPRequestImpl.rangeRe.matches(in: rngHeader, options: .anchored, range:
-                NSRange(location: 0, length: rngHeader.characters.count)).first
+                NSRange(location: 0, length: rngHeader.count)).first
             , match.numberOfRanges == 3 else {
                 throw BRHTTPServerError.invalidRangeHeader
         }
