@@ -381,8 +381,9 @@ replacementString:(NSString *)string
             textVal = [textVal stringByReplacingCharactersInRange:range withString:string];
         }
         else {
-            textVal = [numberFormatter stringFromNumber:[numberFormatter numberFromString:[textVal
-                       stringByReplacingCharactersInRange:range withString:string]]];
+            NSString *textValReplacement = [textVal stringByReplacingCharactersInRange:range withString:string];
+            textVal = [numberFormatter stringFromNumber:[numberFormatter numberFromString:textValReplacement]];
+            if (!textVal) textVal = textValReplacement;
         }
     }
     

@@ -1268,7 +1268,11 @@ static NSDictionary *getKeychainDict(NSString *key, NSError **error)
 - (int64_t)amountForString:(NSString *)string
 {
     if (string.length == 0) return 0;
-    return [[NSDecimalNumber decimalNumberWithDecimal:[self.format numberFromString:string].decimalValue]
+    NSNumber * number = [self.format numberFromString:string];
+    if (!number) {
+        number = [self.format numberFromString:[string substringFromIndex:2]];
+    }
+    return [[NSDecimalNumber decimalNumberWithDecimal:number.decimalValue]
             decimalNumberByMultiplyingByPowerOf10:self.format.maximumFractionDigits].longLongValue;
 }
 
