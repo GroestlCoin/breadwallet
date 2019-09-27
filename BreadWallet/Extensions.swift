@@ -47,8 +47,8 @@ public extension String {
     func parseQueryString() -> [String: [String]] {
         var ret = [String: [String]]()
         var strippedString = self
-        if self.substring(to: self.characters.index(self.startIndex, offsetBy: 1)) == "?" {
-            strippedString = self.substring(from: self.characters.index(self.startIndex, offsetBy: 1))
+        if self.substring(to: self.index(self.startIndex, offsetBy: 1)) == "?" {
+            strippedString = self.substring(from: self.index(self.startIndex, offsetBy: 1))
         }
         strippedString = strippedString.replacingOccurrences(of: "+", with: " ")
         strippedString = strippedString.removingPercentEncoding!
