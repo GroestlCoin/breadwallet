@@ -1228,16 +1228,19 @@ presentingController:(UIViewController *)presenting sourceController:(UIViewCont
 // MARK: - DWQRScanViewModelDelegate
 
 - (void)qrScanViewModel:(DWQRScanViewModel *)viewModel didScanStandardNonPaymentRequest:(BRPaymentRequest *)request {
-    [self dismissViewControllerAnimated:YES completion:^{
-        if (request.amount > 0) self.canChangeAmount = YES;
-        if (request.isValid && self.showBalance) {
-            [self showBalance:request.paymentAddress];
-            [self cancel:nil];
-        }
-        else {
-            [self confirmRequest:request];
-        }
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:^{
+            if (request.amount > 0) self.canChangeAmount = YES;
+            if (request.isValid && self.showBalance) {
+                [self showBalance:request.paymentAddress];
+                [self cancel:nil];
+            }
+            else {
+                [self confirmRequest:request];
+            }
+        }];
+    });
+
 }
 
 - (void)qrScanViewModel:(DWQRScanViewModel *)viewModel
